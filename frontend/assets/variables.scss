@@ -1,0 +1,13 @@
+// Ref: https://github.com/nuxt-community/vuetify-module#customvariables
+//
+// The variables you want to modify
+// $font-size-root: 20px;
+.v-toolbar__content,
+.v-toolbar__extension {
+  padding: 0 !important;
+}
+
+.v-application code {
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0) !important;
+  border: 1px solid #ddd;
+}
