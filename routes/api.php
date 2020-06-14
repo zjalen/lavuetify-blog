@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 //Route::apiResource('articles', ArticlesController::class)->only(['index', 'show']);
-Route::namespace('api')->group(function (\Illuminate\Routing\Router $router) {
+Route::namespace('Api')->group(function (\Illuminate\Routing\Router $router) {
     // 在 「App\Http\Controllers\Api」 命名空间下的控制器
     $router->get('article-ids', 'ArticlesController@ids');
     $router->apiResource('articles', 'ArticlesController')->only(['index', 'show']);
