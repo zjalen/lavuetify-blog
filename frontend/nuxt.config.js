@@ -3,6 +3,10 @@ require('dotenv').config()
 
 export default {
   mode: 'universal',
+  server: {
+    port: process.env.SERVER_PORT, // default: 3000
+    host: process.env.SERVER_HOST // default: localhost
+  },
   /*
   ** Headers of the page
   */

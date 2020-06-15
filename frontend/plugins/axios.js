@@ -26,7 +26,7 @@ export default function ({ $axios, redirect }, inject) {
 
   // Set baseURL to something different
   // TODO 根据线上部署地址改写
-  axios.setBaseURL('http://localhost:3000/api')
+  axios.setBaseURL('http://' + process.env.SERVER_HOST + ':' + process.env.SERVER_PORT + '/api')
 
   // Inject to context as $api
   inject('api', api(axios))
