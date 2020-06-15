@@ -39,7 +39,13 @@ export default {
       })
   },
   async asyncData ({ app, store, payload }) {
-    const links = payload || await app.$api.getLinks.data.data
+    let links = null
+    if (payload) {
+      links = payload
+    } else {
+      const res = await app.$api.getLinks()
+      links = res.data.data
+    }
     store.dispatch('actionSetCurrentMenu', '友链')
     return {
       links

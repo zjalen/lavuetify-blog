@@ -140,7 +140,13 @@ export default {
       })
   },
   async asyncData ({ app, params, store, payload }) {
-    const article = payload || await app.$api.getArticle(params.id).data.data
+    let article = null
+    if (payload) {
+      article = payload
+    } else {
+      const res = await app.$api.getArticle(params.id)
+      article = res.data.data
+    }
     const breadcrumbs = [
       {
         disabled: false,

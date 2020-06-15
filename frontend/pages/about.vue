@@ -29,7 +29,13 @@ export default {
       })
   },
   async asyncData ({ app, store, payload }) {
-    const article = payload || await app.$api.getPage('about').data.data
+    let article = null
+    if (payload) {
+      article = payload
+    } else {
+      const res = await app.$api.getPage('about')
+      article = res.data.data
+    }
     store.dispatch('actionSetCurrentMenu', '关于')
     return {
       article
