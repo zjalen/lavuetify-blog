@@ -52,8 +52,20 @@ export default {
     }
   },
   data: () => ({
-    links: []
-  })
+    links: [],
+    title: '友情链接',
+    description: '如果你想和我交换链接，可以给我留言'
+  }),
+  head () {
+    return {
+      title: this.title,
+      meta: [
+        { hid: 'description', name: 'description', content: this.description },
+        { hid: 'author', name: 'author', content: 'Jalen 张佳林' },
+        { hid: 'keywords', name: 'keywords', content: 'developer,ios,java,android,html,vue' }
+      ]
+    }
+  }
 }
 </script>
 

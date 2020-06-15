@@ -44,6 +44,8 @@ export default {
   data () {
     return {
       article: {},
+      title: '关于我',
+      description: '只是个开发。从后台开发到前端开发，从IOS到Android，从公众号到小程序，从物联网平台到桌面上位机。',
       imgSrc: null,
       showImgView: false,
       loading: true,
@@ -66,6 +68,16 @@ export default {
     },
     hideImg () {
       this.showImgView = false
+    }
+  },
+  head () {
+    return {
+      title: this.title,
+      meta: [
+        { hid: 'description', name: 'description', content: this.description },
+        { hid: 'author', name: 'author', content: 'Jalen 张佳林' },
+        { hid: 'keywords', name: 'keywords', content: 'developer,ios,java,android,html,vue' }
+      ]
     }
   }
 }

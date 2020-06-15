@@ -169,7 +169,9 @@ export default {
         nuxt: true
       }
     ]
+    let title = '首页'
     if (query.category) {
+      title = query.category
       breadcrumbs.push({
         disabled: true,
         to: '/?category=' + query.category,
@@ -177,9 +179,11 @@ export default {
         nuxt: true
       })
     }
-    return { articles: items, total_count, perPageCount, pageCount, page, breadcrumbs }
+    return { articles: items, total_count, perPageCount, pageCount, page, breadcrumbs, title }
   },
   data: () => ({
+    title: '',
+    description: '一个基于 Vue、Vuetify、Laravel 的技术博客，交流 IOS、Android、Html5、PHP、JAVA、操作系统等的开发技术。',
     items: [],
     breadcrumbs: [],
     loading: false,
@@ -257,6 +261,16 @@ export default {
       this.$router.push({
         path: '/articles/' + articleId
       })
+    }
+  },
+  head () {
+    return {
+      title: this.title,
+      meta: [
+        { hid: 'description', name: 'description', content: this.description },
+        { hid: 'author', name: 'author', content: 'Jalen 张佳林' },
+        { hid: 'keywords', name: 'keywords', content: 'developer,ios,java,android,html,vue' }
+      ]
     }
   }
 }

@@ -195,6 +195,19 @@ export default {
     next_title () {
       const title = this.article.next ? this.article.next.title : null
       return title.length > 16 ? title.substr(0, 16) + '...' : title
+    },
+    title () {
+      return this.article.title
+    },
+    description () {
+      return this.article.description
+    },
+    tags () {
+      let tags = ''
+      this.article.tags.forEach((value) => {
+        tags += value.name + ','
+      })
+      return tags
     }
   },
   watch: {
@@ -287,6 +300,16 @@ export default {
       //     // document.head.removeChild(links[i])
       //   }
       // }
+    }
+  },
+  head () {
+    return {
+      title: this.title,
+      meta: [
+        { hid: 'description', name: 'description', content: this.description },
+        { hid: 'author', name: 'author', content: 'Jalen 张佳林' },
+        { hid: 'keywords', name: 'keywords', content: this.tags }
+      ]
     }
   }
 }
