@@ -42,18 +42,6 @@
   padding: 6px 16px !important;
 }
 
-.markdown-body pre code {
-  color: var(--v-accent-base) !important;
-}
-
-.markdown-body p code {
-  background-color: #f6f6f6;
-}
-
-.markdown-body li code {
-  background-color: #f6f6f6;
-}
-
 .markdown-body pre {
   padding: 0 !important;
   background-color: #f8f8f8 !important;
@@ -67,8 +55,10 @@
   background: rgba(0, 0, 0, 0) !important;
   //padding: 5px 5px 2px 5px;
   border-radius: 3px;
-  margin: 0 3px;
+  margin: 0;
+  padding: 0;
   font-weight: 500 !important;
+  color: var(--v-accent-base) !important;
 
   &::before {
     content: unset !important;

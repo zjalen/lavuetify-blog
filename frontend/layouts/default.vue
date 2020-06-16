@@ -1,11 +1,11 @@
 <template>
   <v-app style="overflow-x: hidden">
     <top-header class="header" :categories="propData.categories" />
-    <v-content class="content">
+    <v-main class="content">
       <v-container style="max-width: 1185px;">
         <nuxt />
       </v-container>
-    </v-content>
+    </v-main>
     <bottom-footer class="footer" />
     <go-to-top />
     <v-overlay :value="loading">
