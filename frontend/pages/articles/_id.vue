@@ -119,7 +119,6 @@
 
 <script>
 // 自定义样式，调整默认样式以适应 dark 模式
-import '../../assets/custom-markdown.scss'
 import hljs from 'highlight.js'
 // import 'highlight.js/styles/github.css'
 // import { mavonEditor } from 'mavon-editor'

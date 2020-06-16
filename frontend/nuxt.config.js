@@ -22,6 +22,9 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
+  router: {
+    middleware: ['browserVersion']
+  },
   /*
   ** Customize the progress-bar color
   */
@@ -30,7 +33,7 @@ export default {
   ** Global CSS
   */
   css: [
-    // '~/assets/custom-markdown.scss'
+    '~/assets/custom-markdown.scss'
   ],
   /*
   ** Plugins to load before mounting the App
