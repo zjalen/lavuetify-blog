@@ -4,7 +4,7 @@ export default function ({ req, route, redirect }) {
   if (!route.path.includes('ie-not-support')) {
     if (explorer.includes('MSIE')) { // ie10及以下
       return redirect(
-        process.env.SERVER_HOST + ':' + process.env.SERVER_PORT +
+        process.env.SERVER_DOMIN +
         '/ie-not-support')
     }
     // else if (explorer.includes('Firefox')) { // Firefox
