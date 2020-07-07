@@ -1,114 +1,119 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import vuetify from '../plugins/vuetify'
-import { getJsonData } from '../api'
+// import vuetify from '../plugins/vuetify'
+// import { getJsonData } from '../api'
+import Cookies from 'js-cookie'
+const cookie_project = Cookies.get('current_project') ? JSON.parse(Cookies.get('current_project')) : null;
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        // 这里放全局参数
-        mounting: false,
-        loading: true,
-        menus: [],
-        codeStyle: 'github',
-        dark: false,
-
-        // mock 数据
-        categories: null,
-        pages: null,
-        topics: null,
-        articles: null,
-    },
-
-    mutations: {
-        // 这里是同步 set 方法，通过 commit 方式触发 this.$store.commit('setToken', token)
-        setMounting(state, status) {
-            state.mounting = status
+        user: null,
+        drawer: sessionStorage.getItem('drawer') === '1',
+        dark: sessionStorage.getItem('current_theme') === 'dark',
+        current_community: sessionStorage.getItem('current_community') ? JSON.parse(sessionStorage.getItem('current_community')) : null,
+        snackbar: {
+            show: false,
+            message: '',
+            color: 'primary',
+            timeout: 5000
         },
-        setLoading(state, status) {
-            state.loading = status
+        dialog: {
+            show: false,
+            title: '',
+            text: '',
+            sign: ''
         },
-        setDarkTheme(state, data) {
-            state.dark = data
-        },
-        setMenus(state, menus) {
-            state.menus = menus
-        },
-        setCategories(state, categories) {
-            state.categories = categories
-        },
-        setPages(state, pages) {
-            state.pages = pages
-        },
-        setTopics(state, topics) {
-            state.topics = topics
-        },
-        setArticles(state, articles) {
-            state.articles = articles
-        },
-        setJsonData(state, params) {
-            state[params.name] = params.value
-        }
+        current_project: cookie_project,
     },
 
     getters: {
         // 这里是get方法
-        mounting: state => state.mounting,
-        loading: state => state.loading,
-        dark: state => sessionStorage.getItem('current_theme') === 'dark' ? true : state.dark,
-        menus: state => state.menus,
-        categories: state => state.categories,
-        topics: state => state.topics,
-        pages: state => state.pages,
-        articles: state => state.articles,
-        codeStyle: () => vuetify.preset.theme.dark ? 'androidstudio' : 'github',
+        user: state => state.user,
+        drawer: state => state.drawer,
+        dark: state => state.dark,
+        current_community: state => state.current_community,
+        snackbar: state => state.snackbar,
+        dialog: state => state.dialog,
+        current_project: state => state.current_project,
+    },
+
+    mutations: {
+        // 这里是同步 set 方法，通过 commit 方式触发 this.$store.commit('setToken', token)
+        setUser(state, data) {
+            state.user = data
+        },
+        setDrawer(state, data) {
+            state.drawer = data
+        },
+        setDarkTheme(state, data) {
+            state.dark = data
+        },
+        setCurrentCommunity(state, data) {
+            state.current_community = data
+        },
+        setSnackbar(state, data) {
+            state.snackbar = data
+        },
+        switchSnackbar(state, bool) {
+            state.snackbar.show = bool
+        },
+        setDialog(state, data) {
+            state.dialog = data
+        },
+        SWITCH_PROJECT: (state, data) => {
+            Cookies.set('current_project', JSON.stringify(data))
+            state.current_project = data
+        },
     },
 
     actions: {
         // 这里是异步方法，可以在组件中使用 this.$store.dispatch('actionSetUserInfo', user_info) 分发调用 mutation 方法进行 set
-        actionSetMounting({ commit }, status) {
-            commit('setMounting', status)
+        actionSetUser({commit}, data) {
+            commit('setUser', data)
         },
-        actionSetLoading({ commit }, status) {
-            commit('setLoading', status)
-        },
-        actionSetMenus({ commit }, menus) {
-            commit('setMenus', menus)
-        },
-        actionSetCategories({ commit }, data) {
-            commit('setMenus', data)
-        },
-        actionSetPages({ commit }, data) {
-            commit('setPages', data)
-        },
-        actionSetTopics({ commit }, data) {
-            commit('setTopics', data)
-        },
-        actionSetArticles({ commit }, data) {
-            commit('setArticles', data)
+        actionSetDrawer({commit}, data) {
+            commit('setDrawer', data)
+            let sign = '1';
+            if (!data) {
+                sign = '0';
+            }
+            sessionStorage.setItem('drawer', sign)
         },
         actionSetDarkTheme({ commit }, data) {
             commit('setDarkTheme', data)
             let theme = data ? 'dark' : 'light';
             sessionStorage.setItem('current_theme', theme)
         },
-        actionGetJsonData({ commit }, name) {
-            return new Promise((resolve, reject) => {
-                if (!this.state[name]) {
-                    getJsonData('/json/' + name + '.json').then(response => {
-                        let data = response;
-                        commit('setJsonData', { name: name, value: data });
-                        resolve(data)
-                    }).catch(error => {
-                        reject(error)
-                    })
-                } else {
-                    resolve(this.state[name])
-                }
-            });
-            //    commit('getJsonData', name);
+        actionSetCurrentCommunity({ commit }, data) {
+            commit('setCurrentCommunity', data)
+            sessionStorage.setItem('current_community', JSON.stringify(data))
         },
+        switchProject({ commit }, data) {
+            // commit('SWITCH_PROJECT', str)
+            // resolve()
+            return new Promise(resolve => {
+                commit('SWITCH_PROJECT', data)
+                resolve()
+            })
+        }
+        // actionGetJsonData({ commit }, name) {
+        //     return new Promise((resolve, reject) => {
+        //         if (!this.state[name]) {
+        //             getJsonData('/json/' + name + '.json').then(response => {
+        //                 let data = response;
+        //                 commit('setJsonData', { name: name, value: data });
+        //                 resolve(data)
+        //             }).catch(error => {
+        //                 reject(error)
+        //             })
+        //         } else {
+        //             resolve(this.state[name])
+        //         }
+        //     });
+        //        commit('getJsonData', name);
+        // },
     },
 
     modules: {

@@ -1,14 +1,13 @@
 <template>
-<!--    <layout></layout>-->
-    <h1>Hello World</h1>
+    <router-view />
 </template>
 
 <script>
-// import Layout from "./components/layouts/Layout";
+import Layout from "./layouts/Layout";
 
 export default {
   name: "App",
-  // components: { Layout },
+  components: { Layout },
   data() {
     return {
       home: null
