@@ -4,7 +4,11 @@ const routes = [
                 { name: 'login', path: '', component: () => import('@/views/Login') },
             ]
     },
-    // { name: 'index', path: '/', component: () => import('../views/Articles') },
-];
+  { path: '/', component: () => import('@/layouts/Layout'), children:
+      [
+        { name: 'home', path: '/', component: () => import('../views/Home') },
+      ]
+  },
+]
 
-export default routes;
+export default routes

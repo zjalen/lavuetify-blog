@@ -8,7 +8,7 @@
             </v-container>
         </v-main>
         <v-footer
-            color="indigo"
+            color="primary"
             app
         >
             <span class="white--text">&copy; 2020</span>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-  import LeftMenu from './LeftMenu';
+  import LeftMenu from './LeftMenu'
   import TopHeader from './TopHeader'
   import SnackBarToast from '../components/SnackBarToast'
   import MyDialog from '../components/MyDialog'

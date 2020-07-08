@@ -13,7 +13,9 @@
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
-        "overtrue/socialite": "^2.0"
+        "mews/captcha": "^3.1",
+        "overtrue/socialite": "^2.0",
+        "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.7",

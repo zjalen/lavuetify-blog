@@ -4,7 +4,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\AbstractBaseController;
-use App\Http\Controllers\Api\Traits\ApiResponse;
+use App\Http\Controllers\Traits\ApiResponse;
 
 abstract class ApiBaseController extends AbstractBaseController
 {

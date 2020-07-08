@@ -6,8 +6,7 @@
         clipped-left
     >
         <v-app-bar-nav-icon v-if="show_menu" @click.stop="switchDrawer" />
-        <v-toolbar-title v-if="project" @click="switchProject">{{project.name}}数据中心</v-toolbar-title>
-        <v-toolbar-title v-else>欣美数据中心</v-toolbar-title>
+        <v-toolbar-title>Jalen 的博客后台</v-toolbar-title>
 
         <v-spacer></v-spacer>
         <div class="pr-1">
@@ -44,28 +43,24 @@
     },
     computed: {
       icon_light() {
-        return this.$store.getters.dark ? 4 : 7;
+        return this.$store.getters.dark ? 4 : 7
       }
     },
     methods: {
       switchDrawer() {
-        let value = this.$store.getters.drawer;
-        this.$VM.$emit('switchDrawer', !value);
+        let value = this.$store.getters.drawer
+        this.$VM.$emit('switchDrawer', !value)
       },
       switchTheme() {
-        let theme = this.$store.getters.dark;
-        this.$store.dispatch('actionSetDarkTheme', !theme);
+        let theme = this.$store.getters.dark
+        this.$store.dispatch('actionSetDarkTheme', !theme)
         location.reload()
       },
       logout() {
-        logout().then(response => {
-          location.href = location.origin + '/login'
+        logout().then(() => {
+          this.$store.dispatch('actionSetToken', null)
+          this.$router.push({ name: 'login' })
         })
-      },
-      switchProject() {
-        this.$router.push({
-          path: '/projects'
-        });
       }
     }
   }

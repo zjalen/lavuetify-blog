@@ -12,14 +12,25 @@
 */
 
 Route::get('/', function () {
-    return view('index');
+    return view('welcome');
 });
 
 
-Route::get('/backend', function () {
+Route::get('/admin', function () {
     return view('backend');
 });
 
 Route::get('/ie-not-support', function () {
     return view('ie-not-support');
+});
+
+Route::group([
+    'middleware' => ['web', 'api'],
+    'prefix' => 'api/admin',
+    'namespace' => 'Admin\Auth'
+], function () {
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
 });

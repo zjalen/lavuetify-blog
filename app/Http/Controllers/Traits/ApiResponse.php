@@ -5,7 +5,7 @@
  * Date: 2019-08-08
  * Time: 09:52
  */
-namespace App\Http\Controllers\Api\Traits;
+namespace App\Http\Controllers\Traits;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as FoundationResponse;
 
