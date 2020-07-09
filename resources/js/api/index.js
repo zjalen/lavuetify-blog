@@ -1,13 +1,6 @@
 import qs from 'qs'
 import request from '../utils/request'
 
-export function getUserMessage() {
-  return request({
-    url: '/me',
-    method: 'post'
-  })
-}
-
 /**
  * 获取菜单信息
  */
@@ -28,6 +21,19 @@ export function getArticles(params) {
     method: 'get',
   })
 }
+
+
+/**
+ * 删除文章
+ * @param id
+ */
+export function deleteArticle(id) {
+  return request({
+    url: '/articles/' + id,
+    method: 'delete',
+  })
+}
+
 
 /**
  * 获取文章详情

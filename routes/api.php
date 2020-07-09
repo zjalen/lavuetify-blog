@@ -14,15 +14,11 @@ use Illuminate\Http\Request;
 */
 
 Route::group([
-    'middleware' => ['web', 'api'],
+    'middleware' => ['api'],
     'prefix' => 'admin',
-    'namespace' => 'Admin\Auth'
-], function ($router) {
-    Route::post('login', 'AuthController@login');
-    Route::post('logout', 'AuthController@logout');
-    Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', 'AuthController@me');
-
+    'namespace' => 'Admin'
+], function (\Illuminate\Routing\Router $router) {
+    $router->apiResource('articles', 'ArticlesController');
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
+import router from '@/router'
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 let token = document.head.querySelector('meta[name="csrf-token"]')
@@ -62,9 +63,9 @@ service.interceptors.response.use(
     if(error.response.status === 401) {
       message = '登录失效，请重新登录'
       store.commit('setToken', null)
-      // setTimeout(()=> {
-      //   router.push({name: 'login'})
-      // }, 1500)
+      setTimeout(()=> {
+        router.push({name: 'login'})
+      }, 1500)
     }
     store.commit('setSnackbar', {
       message: message,

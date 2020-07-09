@@ -37,7 +37,7 @@
         show: false,
         menu_list: [
           {
-            group: '菜单列表',
+            group: '前端管理',
             current: null,
             children: [
               {
@@ -46,46 +46,51 @@
                 sign: 'home',
               },
               {
-                title: '小区信息',
-                icon: 'office-building',
-                sign: 'communities',
+                title: '文章管理',
+                icon: 'pencil-outline',
+                sign: 'articles',
               },
               {
-                title: '水表信息',
-                icon: 'gauge',
-                sign: 'meters',
+                title: '评论管理',
+                icon: 'message-reply',
+                sign: 'comments',
               },
               {
-                title: '用水记录',
-                icon: 'calendar-month-outline',
-                sign: 'room-histories',
+                title: '友链管理',
+                icon: 'link',
+                sign: 'links',
               },
               {
-                title: '水表充值单',
-                icon: 'cash-100',
-                sign: 'meter-recharge-orders',
+                title: '文章分类',
+                icon: 'menu',
+                sign: 'categories',
               },
               {
-                title: '水卡充值单',
-                icon: 'cash-usd-outline',
-                sign: 'card-recharge-orders',
+                title: '标签管理',
+                icon: 'tag',
+                sign: 'tags',
+              },
+              {
+                title: '主题管理',
+                icon: 'file-document',
+                sign: 'themes',
+              },
+              {
+                title: '页面管理',
+                icon: 'newspaper-variant',
+                sign: 'pages',
               },
             ]
           },
           {
-            group: '下载中心',
+            group: '后台管理',
             current: null,
             children: [
               {
-                title: '水表充值报表',
-                icon: 'file-document-box-multiple-outline',
-                sign: 'meter-recharge-report',
-              },
-              {
-                title: '水卡充值报表',
-                icon: 'file-document-box-multiple-outline',
-                sign: 'card-recharge-report',
-              },
+                title: '后台菜单',
+                icon: 'menu-open',
+                sign: 'admin-menu',
+              }
             ]
           },
         ],
@@ -101,7 +106,7 @@
       show () {
         this.$store.dispatch('actionSetDrawer', this.show)
       },
-      '$route': function (to, from) {
+      '$route': function () {
         this.updateMenuSign()
       },
     },

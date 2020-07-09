@@ -3,15 +3,10 @@
 </template>
 
 <script>
-import { getUserMessage } from '../api'
 
 export default {
   name: 'Home',
-  mounted () {
-    getUserMessage().then(response => {
-      console.log(response)
-    })
-  }
+  mounted () {}
 }
 </script>
 

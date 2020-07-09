@@ -8,7 +8,14 @@ import store from '../store'
 
 Vue.use(Vuetify)
 
+// Translation provided by Vuetify (javascript)
+import zhHans from 'vuetify/es5/locale/zh-Hans'
+
 export default new Vuetify({
+  lang: {
+    locales: { zhHans },
+    current: 'zhHans',
+  },
   theme: {
       themes: {
           light: {
@@ -20,8 +27,8 @@ export default new Vuetify({
               grey: colors.grey
           },
           dark: {
-              primary: colors.shades,
-              secondary: colors.blueGrey,
+              primary: colors.blueGrey,
+              secondary: colors.shades,
               tertiary: colors.orange,
               accent: colors.shades,
               error: colors.red,

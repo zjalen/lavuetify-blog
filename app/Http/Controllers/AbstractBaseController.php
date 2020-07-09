@@ -3,34 +3,54 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Models\Category;
+use App\Http\Controllers\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class AbstractBaseController extends Controller
+class AbstractBaseController extends Controller
 {
-    /** @var array 搜索列白名单 */
+    use ApiResponse;
+
     private $allow_search_columns = [];
-    /** @var array 显示列白名单 */
     private $allow_show_columns = [];
-    /** @var array 附加搜索条件 */
-    private $append_condition = [];
-    /** @var Builder 模型筛选构造器 */
     private $builder = null;
-    /** @var Model 模型 */
+    private $mp_info = null;
     private $model = null;
-    /** @var array 输出内容 */
-    private $base_params = [];
+    private $append_condition = [];
+
+    public function getAllowSearchColumns()
+    {
+        return $this->allow_search_columns;
+    }
+
+    public function getAllowShowColumns()
+    {
+        return $this->allow_show_columns;
+    }
+
+    public function getBuilder()
+    {
+        return $this->builder;
+    }
+
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    public function getAppendCondition()
+    {
+        return $this->append_condition;
+    }
+
+    public function setAppendCondition(array $condition = [])
+    {
+        $this->append_condition = $condition;
+    }
 
     public function setAllowSearchColumns(array $allow_search_columns = [])
     {
         $this->allow_search_columns = $allow_search_columns;
-    }
-
-    public function getAllowSearchColumns() :array
-    {
-        return $this->allow_search_columns;
     }
 
     public function setAllowShowColumns(array $allow_show_columns = [])
@@ -38,19 +58,9 @@ abstract class AbstractBaseController extends Controller
         $this->allow_show_columns = $allow_show_columns;
     }
 
-    public function getAllowShowColumns() :array
-    {
-        return $this->allow_show_columns;
-    }
-
     public function setBuilder(Builder $builder)
     {
         $this->builder = $builder;
-    }
-
-    public function getBuilder() :Builder
-    {
-        return $this->builder;
     }
 
     public function setModel(Model $model)
@@ -58,43 +68,14 @@ abstract class AbstractBaseController extends Controller
         $this->model = $model;
     }
 
-    public function getModel() :Model
-    {
-        return $this->model;
-    }
-
-    public function setAppendCondition(array $condition)
-    {
-        $this->append_condition = $condition;
-    }
-
-    public function getAppendCondition() :array
-    {
-        return $this->append_condition;
-    }
-
-    public function getBaseParams() :array
-    {
-        return $this->base_params;
-    }
-
     public function __construct()
     {
 
     }
 
-    public function buildQuery(Builder $builder, array $filters, bool $to_get_total_count = false) :Builder
+    public function buildQuery(Builder $builder, array $filters, array $allow_search_columns = [], array $allow_show_columns = [], bool $withPage = false)
     {
-        // 附加查询条件
-        if (count($this->getAppendCondition()) > 0) {
-            $conditions = $this->getAppendCondition();
-            foreach ($conditions as $cond) {
-                $builder->where($cond['column'], $cond['value']);
-            }
-        }
-
-        /** 获取总数则不考虑分页排序 */
-        if (!$to_get_total_count) {
+        if ($withPage) {
             // 限制查询条数
             if (array_key_exists('_limit', $filters)) {
                 $builder = $builder->limit($filters['_limit']);
@@ -106,27 +87,23 @@ abstract class AbstractBaseController extends Controller
                 $builder = $builder->skip($filters['_skip']);
             }
             // 排序
-            if (array_key_exists('_orderBy', $filters)) {
+            if (array_key_exists('_orderBy', $filters) && array_key_exists('_orderByDesc', $filters)) {
                 foreach ($filters['_orderBy'] as $key => $column) {
-                    $builder = $builder->orderBy($column);
-                }
-            }
-            // 倒序
-            if (array_key_exists('_orderByDesc', $filters)) {
-                foreach ($filters['_orderByDesc'] as $key => $column) {
-                    $builder = $builder->orderByDesc($column);
+                    if (array_key_exists($key, $filters['_orderByDesc'])) {
+                        $type = $filters['_orderByDesc'][$key] == 'true' ? 'DESC' : 'ASC';
+                        $builder = $builder->orderBy($column, $type);
+                    }
                 }
             }
         }
-
         // 查询条件
         if (array_key_exists('filters', $filters)) {
-            $wheres = $filters['filters'];
+            $wheres = array_merge($filters['filters'], $this->getAppendCondition());
             foreach ($wheres as $k => $v) {
                 if (is_array($v)) {
                     if (array_key_exists('value', $v) && array_key_exists('column', $v) && array_key_exists('sign', $v)) {
                         // 搜索列白名单
-                        if (count($this->getAllowSearchColumns()) == 0 || array_key_exists($v['column'], $this->getAllowSearchColumns())) {
+                        if (count($allow_search_columns) == 0 || array_key_exists($v['column'], $allow_search_columns)) {
                             switch ($v['sign']) {
                                 case 'whereBetween':
                                     $builder = $builder->whereBetween($v['column'], $v['value']);
@@ -170,9 +147,7 @@ abstract class AbstractBaseController extends Controller
                                             }
 
                                         } else {
-                                            $builder = $builder->whereHas($v['relation_name'], function (Builder $query) use ($v) {
-                                                return $query->where($v['column'], $v['value']);
-                                            });
+                                            $builder = $builder->$v['relation_name']()->where($v['column'], $v['value']);
                                         }
                                     }
                                     break;
@@ -187,9 +162,75 @@ abstract class AbstractBaseController extends Controller
             }
         }
         // 显示列白名单
-        if (count($this->getAllowShowColumns()) > 0) {
-            $builder = $builder->select($this->getAllowShowColumns());
+        if (count($allow_show_columns) > 0) {
+            $builder = $builder->select($allow_show_columns);
         }
         return $builder;
+    }
+
+    public function index()
+    {
+        $filters = request()->query();
+
+        $query = $this->buildQuery($this->getBuilder(), $filters, $this->getAllowSearchColumns(), $this->getAllowShowColumns());
+        $total_count = $query->count();
+        $query = $this->buildQuery($this->getBuilder(), $filters, $this->getAllowSearchColumns(), $this->getAllowShowColumns(), true);
+        $charge_orders = $query->get();
+        return $this->success(['items' => $charge_orders, 'total_count' => $total_count]);
+    }
+
+    public function store()
+    {
+        $params = request()->input();
+        $model = $this->getModel();
+        $model->fill($params);
+        $res = $model->save();
+        if ($res) {
+            return $this->success($model);
+        }else {
+            return $this->failed('保存失败');
+        }
+    }
+
+    public function show($id)
+    {
+        $model = $this->getModel();
+        $res = $model->where('id', $id)->first();
+        if ($res) {
+            return $this->success($res);
+        }else {
+            return $this->notFond();
+        }
+    }
+
+    public function update($id)
+    {
+        $model = $this->getModel();
+        $model = $model->where('id', $id)->first();
+        if (!$model) {
+            return $this->notFond();
+        }
+        $model->fill(\request()->input());
+        $res = $model->save();
+        if (!$res) {
+            return $this->failed('修改失败');
+        }else {
+            return $this->success('修改成功');
+        }
+    }
+
+    public function destroy($id)
+    {
+        $model = $this->getModel();
+        $model = $model->where('id', $id)->first();
+        if (!$model) {
+            return $this->notFond();
+        }
+        $res = $model->delete();
+        if (!$res) {
+            return $this->failed('删除失败');
+        }else {
+            return $this->success();
+        }
     }
 }

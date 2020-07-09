@@ -7,12 +7,7 @@
                 <router-view></router-view>
             </v-container>
         </v-main>
-        <v-footer
-            color="primary"
-            app
-        >
-            <span class="white--text">&copy; 2020</span>
-        </v-footer>
+        <bottom-footer></bottom-footer>
         <snack-bar-toast></snack-bar-toast>
         <my-dialog></my-dialog>
     </v-app>
@@ -23,9 +18,10 @@
   import TopHeader from './TopHeader'
   import SnackBarToast from '../components/SnackBarToast'
   import MyDialog from '../components/MyDialog'
+  import BottomFooter from './BottomFooter'
   export default {
     name: 'Layout',
-    components: { MyDialog, SnackBarToast, LeftMenu, TopHeader },
+    components: { BottomFooter, MyDialog, SnackBarToast, LeftMenu, TopHeader },
     data: () => ({
 
     }),
