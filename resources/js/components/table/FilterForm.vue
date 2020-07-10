@@ -68,15 +68,14 @@ export default {
       filter_array: [],
     }
   },
-  mounted () {
+  created () {
     this.filter_array = this.filters
   },
   methods: {
     submit () {
-      let filters = []
-      this.filter_array.forEach((value) => {
+      let filters = this.filter_array.map((value) => {
         if (value.value) {
-          let where = []
+          let where = {}
           if (value.compare) {
             where['compare'] = value.compare
           }
@@ -86,12 +85,16 @@ export default {
           if (value.relation_name) {
             where['relation_name'] = value.relation_name
           }
-          where['column'] = value.name
+          where['column'] = value.column
           where['value'] = value.value
-          filters.push(where)
+          return where
         }
       })
-      this.$emit('onSearch', filters)
+      
+      let params = filters.filter((val) => {
+        return !!val
+      })
+      this.$emit('onSearch', params)
     },
     clear () {
       this.filter_array = this.filter_array.map((item) => {

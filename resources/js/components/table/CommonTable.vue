@@ -28,6 +28,10 @@
               <v-icon right color="white">mdi-{{button.icon}}</v-icon>
             </v-btn>
             <v-spacer />
+            <v-btn v-if="filters.length > 0" tile outlined class="mx-1 white--text" @click="onRefresh">
+              撤销
+              <v-icon right color="white">mdi-refresh</v-icon>
+            </v-btn>
             <v-btn v-if="filters.length > 0" tile outlined class="mx-1 white--text" @click="dialog = true">
               搜索
               <v-icon right color="white">mdi-card-search-outline</v-icon>
@@ -104,7 +108,7 @@
         </v-card-title>
         <v-row class="mx-0">
           <v-col cols="12">
-            <filter-form :filters="search_filters" @onSearch="onSearch"></filter-form>
+            <filter-form :filters="table_filters" @onSearch="onSearch"></filter-form>
           </v-col>
         </v-row>
       </v-card>
@@ -114,7 +118,6 @@
 
 <script>
 import FilterForm from './FilterForm'
-import qs from 'qs'
 
 export default {
   name: 'CommonTable',
@@ -188,18 +191,25 @@ export default {
         itemsPerPage: 10,
         itemsPerPageOptions: [10, 20, 100],
         page: 1,
-        _orderBy: null,
-        _orderByDesc: null,
+        sortBy: [],
+        sortDesc: []
       },
       params: {},
+      table_filters: [],
       search_filters: [],
       dialog: false,
     }
   },
   watch: {
-    options: {
+    '$route.query': {
       handler () {
         this.init()
+      },
+      deep: true
+    },
+    options: {
+      handler () {
+        this.onHandle()
       },
       deep: true,
     },
@@ -209,35 +219,72 @@ export default {
       return Math.ceil(this.totalDesserts / this.options.itemsPerPage)
     },
   },
-  mounted () {
-    // this.search_filters = this.filters
-    this.options = this.table_options
+  created() {
+    this.table_filters = this.filters
     const { _skip, _orderBy,_orderByDesc, filters } = this.$route.query
     this.options.page = _skip ? Math.floor(_skip / this.options.itemsPerPage) + 1 : 1
-    this.options._orderBy = _orderBy ? _orderBy : null
-    this.options._orderByDesc = _orderByDesc ? _orderByDesc : null
-    if (filters) this.search_filters = qs.parse(filters)
+    if (_orderBy && _orderBy !== "false") this.options.sortBy = JSON.parse(_orderBy)
+    if (_orderByDesc) this.options.sortDesc = JSON.parse(_orderByDesc)
+    if (filters) {
+      this.search_filters = JSON.parse(filters)
+      this.search_filters.forEach(value => {
+        this.table_filters.forEach((val, ind) => {
+          if (val.column === value.column && val.relation_name === value.relation_name) {
+            this.table_filters[ind].value = value.value
+          }
+        })
+      })
+    }
+  },
+  mounted () {
+    // this.options = this.table_options
+    this.init()
   },
   methods: {
     onSearch (where) {
       this.search_filters = where
-      this.init()
+      this.onHandle()
       this.dialog = false
     },
+    onHandle() {
+      const { sortBy, sortDesc, page, itemsPerPage } = this.options
+      let current_page = page ? page : 1
+      let queryParams = {}
+      queryParams['_limit'] = itemsPerPage
+      queryParams['_skip'] = itemsPerPage * (current_page - 1)
+      if (sortBy.length > 0) queryParams['_orderBy'] = JSON.stringify(sortBy)
+      if (sortDesc.length > 0) queryParams['_orderByDesc'] = JSON.stringify(sortDesc)
+      if (this.search_filters.length > 0 ) {
+        queryParams['filters'] = JSON.stringify(this.search_filters)
+      }
+      
+      this.$router.push({
+        query: queryParams,
+      })
+    },
+    onRefresh() {
+      this.options.sortBy = []
+      this.options.sortDesc = []
+      this.search_filters = []
+      this.params['filters'] = []
+      
+      this.$router.push({
+        query: {},
+      })
+    },
     init() {
+      
       const { sortBy, sortDesc, page, itemsPerPage } = this.options
       let current_page = page ? page : 1
       this.params['_limit'] = itemsPerPage
       this.params['_skip'] = itemsPerPage * (current_page - 1)
-      this.params['_orderBy'] = sortBy
-      this.params['_orderByDesc'] = sortDesc
-      this.params['filters'] = this.search_filters.filter(val => {
-        return !!val.value
-      })
-      
-      // TODO 完善 query 与查询条件的转换关联
-      // this.$route.query = qs.stringify(this.params)
-      // this.$router.push({ path: this.$route.path + '?' + queryString })
+      if (sortBy) this.params['_orderBy'] = sortBy
+      if (sortDesc) this.params['_orderByDesc'] = sortDesc
+      if (this.search_filters.length > 0 ) {
+        this.params['filters'] = this.search_filters.filter(val => {
+          return !!val.value
+        })
+      }
       
       this.loading = true
       this.api(this.params).then(response => {

@@ -91,7 +91,7 @@ export default {
       table_api: getArticles,
       table_filters: [
         {
-          name: 'title',
+          column: 'title',
           title: '标题',
           value: '',
           type: 'text',
@@ -100,7 +100,7 @@ export default {
           sign: 'where',
         },
         {
-          name: 'name',
+          column: 'name',
           title: '分类',
           value: '',
           type: 'text',
@@ -110,7 +110,7 @@ export default {
           sign: 'relation',
         },
         {
-          name: 'name',
+          column: 'name',
           title: '主题',
           value: '',
           type: 'text',
