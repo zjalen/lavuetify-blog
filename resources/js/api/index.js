@@ -3,11 +3,39 @@ import request from '../utils/request'
 
 /**
  * 获取分类信息
+ * @param params
+ * @returns {AxiosPromise}
  */
-export function getCategories() {
+export function getCategories(params) {
   return request({
-    url: '/categories',
+    url: '/categories?' + qs.stringify(params),
     method: 'get',
+  })
+}
+
+/**
+ * 删除分类
+ * @param id
+ * @returns {AxiosPromise}
+ */
+export function deleteCategory (id) {
+  return request({
+    url: '/categories/' + id,
+    method: 'delete',
+  })
+}
+
+/**
+ * 修改分类
+ * @param id
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function editCategory (id, params) {
+  return request({
+    url: '/categories/' + id,
+    method: 'put',
+    params
   })
 }
 
@@ -22,12 +50,66 @@ export function getTopics() {
 }
 
 /**
- * 获取主题信息
+ * 删除主题
+ * @param id
+ * @returns {AxiosPromise}
  */
-export function getTags() {
+export function deleteTopic (id) {
   return request({
-    url: '/tags',
+    url: '/topics/' + id,
+    method: 'delete',
+  })
+}
+
+/**
+ * 修改主题
+ * @param id
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function editTopic (id, params) {
+  return request({
+    url: '/topics/' + id,
+    method: 'put',
+    params
+  })
+}
+
+/**
+ * 获取标签
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function getTags(params) {
+  return request({
+    url: '/tags?' + qs.stringify(params),
     method: 'get',
+  })
+}
+
+/**
+ * 删除标签
+ * @param id
+ * @returns {AxiosPromise}
+ */
+export function deleteTag (id) {
+  return request({
+    url: '/tags/' + id,
+    method: 'delete',
+  })
+}
+
+/**
+ * 修改标签
+ * @param id
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function editTag (id, params) {
+  return request({
+    url: '/tags/' + id,
+    method: 'put',
+    params
   })
 }
 
@@ -52,6 +134,16 @@ export function getArticlesCount() {
   })
 }
 
+/**
+ * 获取标签列表
+ */
+export function getArticlesTagList() {
+  return request({
+    url: '/articles/tags',
+    method: 'get',
+  })
+}
+
 
 /**
  * 删除文章
@@ -61,6 +153,18 @@ export function deleteArticle(id) {
   return request({
     url: '/articles/' + id,
     method: 'delete',
+  })
+}
+
+
+/**
+ * 获取文章详情
+ * @param id
+ */
+export function getArticle(id) {
+  return request({
+    url: '/articles/' + id,
+    method: 'get',
   })
 }
 
@@ -130,17 +234,6 @@ export function deleteArticleImage (params) {
     url: '/articles/deleteImage',
     method: 'delete',
     params
-  })
-}
-
-/**
- * 获取文章详情
- * @param id
- */
-export function getArticle(id) {
-  return request({
-    url: '/articles/' + id,
-    method: 'get',
   })
 }
 

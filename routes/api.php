@@ -21,6 +21,7 @@ Route::group([
     $router->post('articles/uploadImage', 'ArticlesController@uploadImage');
     $router->delete('articles/deleteImage', 'ArticlesController@deleteImage');
     $router->get('articles/count', 'ArticlesController@count');
+    $router->get('articles/tags', 'ArticlesController@tags');
     $router->apiResource('articles', 'ArticlesController');
     $router->apiResource('categories', 'CategoriesController');
     $router->apiResource('topics', 'TopicsController');

@@ -129,7 +129,7 @@
 </template>
 
 <script>
-import { getArticle, updateArticle, createArticle, uploadArticleImage, deleteArticleImage, getCategories, getTopics, getTags } from '../api'
+import { getArticle, updateArticle, createArticle, uploadArticleImage, deleteArticleImage, getCategories, getTopics, getArticlesTagList } from '../api'
 
 import '../scss/custom-markdown.scss'
 import { mavonEditor } from 'mavon-editor'
@@ -185,7 +185,7 @@ export default {
     getTopics().then(response => {
       this.topics = response.data.items
     })
-    getTags().then(response => {
+    getArticlesTagList().then(response => {
       this.tags = response.data.items
     })
     setTimeout(() => {

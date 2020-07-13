@@ -56,11 +56,6 @@ export default {
               sign: 'comments',
             },
             {
-              title: '友链管理',
-              icon: 'link',
-              sign: 'links',
-            },
-            {
               title: '文章分类',
               icon: 'menu',
               sign: 'categories',
@@ -73,12 +68,17 @@ export default {
             {
               title: '主题管理',
               icon: 'file-document',
-              sign: 'themes',
+              sign: 'topics',
             },
             {
               title: '页面管理',
               icon: 'newspaper-variant',
               sign: 'pages',
+            },
+            {
+              title: '友链管理',
+              icon: 'link',
+              sign: 'links',
             },
           ],
         },

@@ -39,9 +39,8 @@
           </v-col>
         </v-row>
       </template>
-      <template v-for="(v,key) in level_columns" v-slot:[v]="{ item }">
-        <v-chip :key="key" small :color="getLevelColor(item[v.split('.')[1]])" dark>{{ item[v.split('.')[1]]
-          }}
+      <template v-for="(v,k) in chip_columns" v-slot:[v]="{ item }">
+        <v-chip :key="k" small color="primary" dark>{{ item[v.split('.')[1]] }}
         </v-chip>
       </template>
       <template v-for="(value,key) in bool_columns" v-slot:[value]="{ item }">
@@ -158,7 +157,7 @@ export default {
         return []
       },
     },
-    level_columns: {
+    chip_columns: {
       type: Array,
       default () {
         return []

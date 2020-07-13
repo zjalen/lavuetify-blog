@@ -175,4 +175,9 @@ class ArticlesController extends AdminBaseController
         }
         return $path;
     }
+
+    public function tags()
+    {
+        return $this->success(['items' => Tag::all()->pluck('name')]);
+    }
 }

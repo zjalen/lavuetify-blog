@@ -7,8 +7,9 @@
           :headers="table_headers"
           :api="table_api"
           :filters="table_filters"
-          :bool_columns="table_bool_columns"
           :actions="table_actions"
+          :chip_columns="table_chip_columns"
+          :header_actions="table_head_actions"
           @headerAction="onHeaderAction"
           @action="onClickAction"
         ></common-table>
@@ -18,66 +19,52 @@
 </template>
 
 <script>
-import { getComments, deleteComment, editComment } from '../api/index'
+import { deleteTag, getTags } from '../api/index'
 import CommonTable from '../components/table/CommonTable'
 
 export default {
-  name: 'Comments',
+  name: 'Tags',
   components: { CommonTable },
   data () {
     return {
-      current_comment: null,
+      current_item: null,
       table_headers: [
         { text: 'id', value: 'id', align: 'center', sortable: true },
-        { text: '用户', value: 'user.nickname', align: 'left', sortable: false },
-        { text: '文章', value: 'article.title', align: 'left', sortable: false},
-        { text: '归属评论', value: 'belong_comment.content', align: 'left', sortable: false },
-        { text: '内容', value: 'content', align: 'left', sortable: true },
-        { text: '父级评论', value: 'parent.content', align: 'left', sortable: false },
-        { text: '评论时间', value: 'created_at', align: 'center', sortable: true },
-        { text: '审核', value: 'is_checked', align: 'center', width: 80, sortable: true },
+        { text: '名称', value: 'name', align: 'left', sortable: true },
         { text: '操作', value: 'action', align: 'center', sortable: false },
       ],
-      table_bool_columns: [
-        'item.is_checked'
-      ],
-      table_api: getComments,
+      table_api: getTags,
+      table_chip_columns: ['item.name'],
       table_filters: [
         {
-          column: 'content',
-          title: '内容',
+          column: 'name',
+          title: '名称',
           value: '',
           type: 'text',
           options: [],
           compare: 'like',
           sign: 'where',
-        },
+        }
+      ],
+      table_head_actions: [
         {
-          column: 'title',
-          title: '文章标题',
-          value: '',
-          type: 'text',
-          options: [],
-          relation_name: 'article',
-          compare: 'like',
-          sign: 'relation',
-        },
-        {
-          column: 'nickname',
-          title: '用户名',
-          value: '',
-          type: 'text',
-          options: [],
-          compare: 'like',
-          sign: 'relation',
-          relation_name: 'user',
+          sign: 'create',
+          text: '添加标签',
+          tip: '添加新标签',
+          icon: 'plus',
         },
       ],
       table_actions: [
         {
+          sign: 'edit',
+          text: '编辑',
+          tip: '编辑主题',
+          icon: 'pencil',
+        },
+        {
           sign: 'delete',
           text: '删除',
-          tip: '删除评论',
+          tip: '删除主题',
           icon: 'delete',
         },
       ],
@@ -96,45 +83,34 @@ export default {
     onHeaderAction(params) {
       if (params.sign === 'create') {
         this.$router.push({
-          name: 'comments-create',
+          name: 'tags-create',
         })
       }
     },
     onClickAction (params) {
       if (params.sign === 'edit') {
         this.$router.push({
-          name: 'comments-edit',
+          name: 'tags-edit',
           params: {
             id: params.item.id
           },
         })
       }else if (params.sign === 'delete') {
-        this.current_comment = params.item
+        this.current_item = params.item
         this.dialog = {
           show: true,
-          title: '删除评论',
-          text: '确定删除删除评论吗？',
-          sign: 'deleteComment'
+          title: '删除标签',
+          text: '只删除主题，关联文章自动解绑，确定删除吗？',
+          sign: 'deleteTag'
         }
         this.$store.commit('setDialog', this.dialog)
-      }else if (params.sign === 'is_checked') {
-        let param = {}
-        param[params.sign] = params.item[params.sign] ? 1 : 0
-        editComment(params.item.id, param).then(response => {
-          this.$store.commit('setSnackbar', {
-            message: response.data,
-            color: 'success',
-            timeout: 1500,
-            show: true
-          })
-        })
       }
     },
     onDialogConfirm(sign) {
       this.dialog.show = false
       this.$store.commit('setDialog', this.dialog)
-      if (sign === 'deleteComment') {
-        deleteComment(this.current_comment.id).then(() => {
+      if (sign === 'deleteTag') {
+        deleteTag(this.current_item.id).then(() => {
           this.$store.commit('setSnackbar', {
             message: '删除成功',
             color: 'success',
