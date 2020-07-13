@@ -25,6 +25,7 @@ Route::group([
     $router->apiResource('categories', 'CategoriesController');
     $router->apiResource('topics', 'TopicsController');
     $router->apiResource('tags', 'TagsController');
+    $router->apiResource('comments', 'CommentsController');
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

@@ -224,7 +224,6 @@ export default {
     this.table_filters = this.filters
     const { _limit, _skip, _orderBy, _orderByDesc, filters } = this.$route.query
     this.options.itemsPerPage = _limit ? Number(_limit) : 10
-    console.log(this.options)
     this.options.page = _skip ? Math.floor(_skip / this.options.itemsPerPage) + 1 : 1
     if (_orderBy && _orderBy !== 'false') {
       this.options.sortBy = JSON.parse(_orderBy)

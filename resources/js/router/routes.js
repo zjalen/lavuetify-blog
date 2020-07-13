@@ -14,6 +14,7 @@ const routes = [
         { name: 'articles', path: '/articles', component: () => import('../views/Articles') },
         { name: 'articles-create', path: '/articles/create', component: () => import('../views/ArticleCreateAndEdit') },
         { name: 'articles-edit', path: '/articles/edit/:id', component: () => import('../views/ArticleCreateAndEdit') },
+        { name: 'comments', path: '/comments', component: () => import('../views/Comments') },
       ],
   },
 ]
