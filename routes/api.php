@@ -18,7 +18,13 @@ Route::group([
     'prefix' => 'admin',
     'namespace' => 'Admin'
 ], function (\Illuminate\Routing\Router $router) {
+    $router->post('articles/uploadImage', 'ArticlesController@uploadImage');
+    $router->delete('articles/deleteImage', 'ArticlesController@deleteImage');
+    $router->get('articles/count', 'ArticlesController@count');
     $router->apiResource('articles', 'ArticlesController');
+    $router->apiResource('categories', 'CategoriesController');
+    $router->apiResource('topics', 'TopicsController');
+    $router->apiResource('tags', 'TagsController');
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

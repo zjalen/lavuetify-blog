@@ -5,8 +5,8 @@ export const state = () => ({
   menus: [],
   dark: false,
   current_menu_index: 0,
-  dark_code_style: 'androidstudio',
-  light_code_style: 'github',
+  dark_code_style: 'monokai-sublime',
+  light_code_style: 'androidstudio',
   api_host: 'http://lavuetify-blog.test',
   // mock 数据
   categories: null,

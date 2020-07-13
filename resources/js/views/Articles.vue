@@ -5,13 +5,13 @@
         <card-with-icon :item="info.total"></card-with-icon>
       </v-col>
       <v-col :sm="6" :md="3" xs="12">
-        <card-with-icon :item="info.warn"></card-with-icon>
+        <card-with-icon :item="info.publish"></card-with-icon>
       </v-col>
       <v-col :sm="6" :md="3" xs="12">
-        <card-with-icon :item="info.close"></card-with-icon>
+        <card-with-icon :item="info.top"></card-with-icon>
       </v-col>
       <v-col :sm="6" :md="3" xs="12">
-        <card-with-icon :item="info.abnormal"></card-with-icon>
+        <card-with-icon :item="info.draft"></card-with-icon>
       </v-col>
     </v-row>
     <v-row class="mx-0">
@@ -36,7 +36,7 @@
 <script>
 import CardWithIcon from '../components/card/CardWithIcon'
 
-import { getArticles, deleteArticle } from '@/api/index'
+import { getArticles, deleteArticle, getArticlesCount, updateArticle } from '../api/index'
 import CommonTable from '../components/table/CommonTable'
 
 export default {
@@ -52,21 +52,21 @@ export default {
           title: '0',
           icon: 'newspaper-variant',
         },
-        warn: {
+        draft: {
           color: 'secondary',
           subtitle: '草稿箱',
           title: '0',
           icon: 'newspaper-variant',
         },
-        close: {
+        top: {
           color: 'error',
-          subtitle: '热门',
+          subtitle: '置顶',
           title: '0',
           icon: 'newspaper-variant',
         },
-        abnormal: {
+        publish: {
           color: 'deep-orange',
-          subtitle: '置顶',
+          subtitle: '发布数',
           title: '0',
           icon: 'newspaper-variant',
         },
@@ -74,14 +74,14 @@ export default {
       table_headers: [
         { text: 'id', value: 'id', align: 'center', sortable: true },
         { text: '标题', value: 'title', align: 'left', sortable: true, width: 500 },
-        { text: '封面', value: 'cover_full_path', width: 150, sortable: false},
-        { text: '置顶', value: 'is_top', align: 'center', sortable: true },
+        { text: '封面', value: 'cover_full_path', align: 'center', width: 150, sortable: false},
+        { text: '置顶', value: 'is_top', align: 'center', width: 50, sortable: true },
         { text: '分类', value: 'category.name', align: 'left', sortable: false },
         { text: '主题', value: 'topic.name', align: 'left', sortable: false },
         { text: '创建日期', value: 'created_at', align: 'left', sortable: true },
         { text: '点击量', value: 'pageviews', align: 'left', sortable: true },
-        { text: '草稿', value: 'is_draft', align: 'left', sortable: true },
-        { text: '操作', value: 'action', align: 'left', sortable: false },
+        { text: '草稿', value: 'is_draft', align: 'center', sortable: true },
+        { text: '操作', value: 'action', align: 'center', sortable: false },
       ],
       table_image_columns: ['item.cover_full_path'],
       table_bool_columns: [
@@ -153,18 +153,24 @@ export default {
   },
   methods: {
     initData () {
+      getArticlesCount().then(response => {
+        this.info.total.title = response.data.total
+        this.info.draft.title = response.data.draft
+        this.info.top.title = response.data.top
+        this.info.publish.title = response.data.publish
+      })
     },
     onHeaderAction(params) {
       if (params.sign === 'create') {
         this.$router.push({
-          name: 'article-create',
+          name: 'articles-create',
         })
       }
     },
     onClickAction (params) {
       if (params.sign === 'edit') {
         this.$router.push({
-          name: 'article-edit',
+          name: 'articles-edit',
           params: {
             id: params.item.id
           },
@@ -178,6 +184,18 @@ export default {
           sign: 'deleteArticle'
         }
         this.$store.commit('setDialog', this.dialog)
+      }else if (params.sign === 'is_top' || params.sign === 'is_draft') {
+        let param = {}
+        param[params.sign] = params.item[params.sign] ? 1 : 0
+        param['_method'] = 'PUT'
+        updateArticle(params.item.id, param).then(response => {
+          this.$store.commit('setSnackbar', {
+            message: response.data,
+            color: 'success',
+            timeout: 1500,
+            show: true
+          })
+        })
       }
     },
     onDialogConfirm(sign) {

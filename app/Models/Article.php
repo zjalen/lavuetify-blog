@@ -12,14 +12,14 @@ class Article extends BaseModel
 
     protected $table = 'articles';
 
-    protected $appends = ['cover_full_path'];
+    protected $appends = ['cover_full_path', 'tag_names'];
 
     protected $with = ['category', 'topic', 'tags:name'];
 
     public function getCoverFullPathAttribute()
     {
         $cover = explode('storage/', $this->cover);
-        $path = count($cover) > 0 ? $cover[1] : $this->cover;
+        $path = count($cover) > 1 ? $cover[1] : $cover[0];
         return Storage::disk('public')->url($path);
     }
 
@@ -36,6 +36,11 @@ class Article extends BaseModel
     public function tags()
     {
         return $this->belongsToMany(Tag::class,'article_tags','article_id','tag_id');
+    }
+
+    public function getTagNamesAttribute()
+    {
+        return $this->tags()->pluck('name');
     }
 
     public function comments()

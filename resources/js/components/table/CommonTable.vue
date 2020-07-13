@@ -27,7 +27,7 @@
               {{button.text}}
               <v-icon right color="white">mdi-{{button.icon}}</v-icon>
             </v-btn>
-            <v-spacer />
+            <v-spacer/>
             <v-btn v-if="filters.length > 0" tile outlined class="mx-1 white--text" @click="onRefresh">
               撤销
               <v-icon right color="white">mdi-refresh</v-icon>
@@ -45,10 +45,11 @@
         </v-chip>
       </template>
       <template v-for="(value,key) in bool_columns" v-slot:[value]="{ item }">
-        <v-chip :key="key" small :color="getBoolColor(item[value.split('.')[1]])" dark>{{
-          getBoolValue(item[value.split('.')[1]])
-          }}
-        </v-chip>
+        <!--        <v-chip :key="key" small :color="getBoolColor(item[value.split('.')[1]])" dark>{{-->
+        <!--          getBoolValue(item[value.split('.')[1]])-->
+        <!--          }}-->
+        <!--        </v-chip>-->
+        <v-switch :key="key" v-model="item[value.split('.')[1]]" inset @change="onSwitch(value.split('.')[1], item)"></v-switch>
       </template>
       <template v-for="(val,key) in image_columns" v-slot:[val]="{ item }">
         <v-img :key="key" :src="item[val.split('.')[1]]" aspect-ratio="1.7" class="ma-2"></v-img>
@@ -192,7 +193,7 @@ export default {
         itemsPerPageOptions: [10, 20, 100],
         page: 1,
         sortBy: [],
-        sortDesc: []
+        sortDesc: [],
       },
       params: {},
       table_filters: [],
@@ -205,7 +206,7 @@ export default {
       handler () {
         this.init()
       },
-      deep: true
+      deep: true,
     },
     options: {
       handler () {
@@ -219,12 +220,18 @@ export default {
       return Math.ceil(this.totalDesserts / this.options.itemsPerPage)
     },
   },
-  created() {
+  created () {
     this.table_filters = this.filters
-    const { _skip, _orderBy,_orderByDesc, filters } = this.$route.query
+    const { _limit, _skip, _orderBy, _orderByDesc, filters } = this.$route.query
+    this.options.itemsPerPage = _limit ? Number(_limit) : 10
+    console.log(this.options)
     this.options.page = _skip ? Math.floor(_skip / this.options.itemsPerPage) + 1 : 1
-    if (_orderBy && _orderBy !== "false") this.options.sortBy = JSON.parse(_orderBy)
-    if (_orderByDesc) this.options.sortDesc = JSON.parse(_orderByDesc)
+    if (_orderBy && _orderBy !== 'false') {
+      this.options.sortBy = JSON.parse(_orderBy)
+    }
+    if (_orderByDesc) {
+      this.options.sortDesc = JSON.parse(_orderByDesc)
+    }
     if (filters) {
       this.search_filters = JSON.parse(filters)
       this.search_filters.forEach(value => {
@@ -246,46 +253,53 @@ export default {
       this.onHandle()
       this.dialog = false
     },
-    onHandle() {
+    onHandle () {
       const { sortBy, sortDesc, page, itemsPerPage } = this.options
       let current_page = page ? page : 1
       let queryParams = {}
       queryParams['_limit'] = itemsPerPage
       queryParams['_skip'] = itemsPerPage * (current_page - 1)
-      if (sortBy.length > 0) queryParams['_orderBy'] = JSON.stringify(sortBy)
-      if (sortDesc.length > 0) queryParams['_orderByDesc'] = JSON.stringify(sortDesc)
-      if (this.search_filters.length > 0 ) {
+      if (sortBy.length > 0) {
+        queryParams['_orderBy'] = JSON.stringify(sortBy)
+      }
+      if (sortDesc.length > 0) {
+        queryParams['_orderByDesc'] = JSON.stringify(sortDesc)
+      }
+      if (this.search_filters.length > 0) {
         queryParams['filters'] = JSON.stringify(this.search_filters)
       }
-      
+
       this.$router.push({
         query: queryParams,
       })
     },
-    onRefresh() {
+    onRefresh () {
       this.options.sortBy = []
       this.options.sortDesc = []
       this.search_filters = []
       this.params['filters'] = []
-      
+
       this.$router.push({
         query: {},
       })
     },
-    init() {
-      
+    init () {
       const { sortBy, sortDesc, page, itemsPerPage } = this.options
       let current_page = page ? page : 1
       this.params['_limit'] = itemsPerPage
       this.params['_skip'] = itemsPerPage * (current_page - 1)
-      if (sortBy) this.params['_orderBy'] = sortBy
-      if (sortDesc) this.params['_orderByDesc'] = sortDesc
-      if (this.search_filters.length > 0 ) {
+      if (sortBy) {
+        this.params['_orderBy'] = sortBy
+      }
+      if (sortDesc) {
+        this.params['_orderByDesc'] = sortDesc
+      }
+      if (this.search_filters.length > 0) {
         this.params['filters'] = this.search_filters.filter(val => {
           return !!val.value
         })
       }
-      
+
       this.loading = true
       this.api(this.params).then(response => {
         this.loading = false
@@ -334,6 +348,9 @@ export default {
     onEmit (sign, item) {
       this.$emit('action', { sign: sign, item: item })
     },
+    onSwitch(sign, item) {
+      this.$emit('action', { sign: sign, item: item })
+    }
   },
 }
 </script>

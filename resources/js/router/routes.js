@@ -12,6 +12,8 @@ const routes = [
       [
         { name: 'home', path: '/', component: () => import('../views/Home') },
         { name: 'articles', path: '/articles', component: () => import('../views/Articles') },
+        { name: 'articles-create', path: '/articles/create', component: () => import('../views/ArticleCreateAndEdit') },
+        { name: 'articles-edit', path: '/articles/edit/:id', component: () => import('../views/ArticleCreateAndEdit') },
       ],
   },
 ]

@@ -8,40 +8,88 @@
 .v-note-wrapper .v-note-panel .v-note-show .v-show-content,
 .v-note-wrapper .v-note-panel .v-note-show .v-show-content-html {
     background-color: rgba(0, 0, 0, 0) !important;
-    padding: 0 !important;
-    border: 0px !important;
+    border: 0 !important;
 }
 
 .v-note-wrapper {
     background-color: rgba(0, 0, 0, 0) !important;
     padding: 0 !important;
-    border: 0px !important;
+    border: 0 !important;
 }
 
 .markdown-body {
     color: var(--v-accent-base) !important;
+    -webkit-appearance: none !important;
 }
 
 .markdown-body table {
-    color: #24292e !important;
+    //color: #24292e !important;
+    border:1px solid rgba(160, 160, 160, 0.5);
+
+    & tr, & tr th, & tr td {
+        border:1px solid rgba(160, 160, 160, 0.5);
+        padding: 3px 5px;
+    }
 }
 
 .markdown-body blockquote {
+    border-left: #607D8B solid 6px;
+    border-radius: 6px;
+    margin: 8px 0;
     color: var(--v-grey-base) !important;
-    background-color: rgba(255, 255, 255, .12);
-    padding: 12px 16px !important;
-}
-
-.markdown-body pre code {
-    color: var(--v-accent-base) !important;
-}
-
-.markdown-body p code {
-    background-color: #f6f6f6;
+    background-color: rgba(0, 164, 243, 0.1);
+    padding: 6px 16px !important;
 }
 
 .markdown-body pre {
     padding: 0 !important;
     background-color: #f8f8f8 !important;
     color: var(--v-grey-lighten1) !important;
+}
+
+.markdown-body pre code {
+    font-size: 85%;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    border: unset;
+    background: rgba(0, 0, 0, 0) !important;
+    //padding: 5px 5px 2px 5px;
+    border-radius: 3px;
+    margin: 0;
+    padding: 0;
+    font-weight: 500 !important;
+    color: var(--v-accent-base) !important;
+
+    &::before {
+        content: unset !important;
+    }
+
+    &::after {
+        content: unset !important;
+    }
+}
+
+.markdown-body {
+    h1 {
+        margin: 16px 0 !important;
+    }
+
+    h2 {
+        margin: 16px 0 !important;
+    }
+
+    h3 {
+        margin: 16px 0 !important;
+    }
+
+    h4 {
+        margin: 16px 0 !important;
+    }
+
+    h5 {
+        margin: 16px 0 !important;
+    }
+}
+
+.markdown-body p {
+    margin: 10px 0 !important;
 }

@@ -14,6 +14,8 @@ export default new Vuex.Store({
     token: cookie_token ? cookie_token : null,
     drawer: sessionStorage.getItem('drawer') === '1',
     dark: sessionStorage.getItem('current_theme') === 'dark',
+    dark_code_style: 'monokai-sublime',
+    light_code_style: 'androidstudio',
     current_community: sessionStorage.getItem('current_community') ? JSON.parse(
       sessionStorage.getItem('current_community')) : null,
     snackbar: {
@@ -32,6 +34,8 @@ export default new Vuex.Store({
 
   getters: {
     // 这里是get方法
+    dark_code_style: state => state.dark_code_style,
+    light_code_style: state => state.light_code_style,
     user: state => state.user,
     drawer: state => state.drawer,
     dark: state => state.dark,

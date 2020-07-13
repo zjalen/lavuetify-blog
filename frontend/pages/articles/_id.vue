@@ -231,6 +231,7 @@ export default {
         const val = this.$store.state.dark
         const style = val === true ? this.$store.state.dark_code_style : this.$store.state.light_code_style
         const oldStyle = val === true ? this.$store.state.light_code_style : this.$store.state.dark_code_style
+        this.importHighlightStyle(style, 'github')
         this.importHighlightStyle(style, oldStyle)
         this.addImgClickEvent()
       })
