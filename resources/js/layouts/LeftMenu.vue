@@ -125,6 +125,9 @@ export default {
           name: sign,
         })
       }
+      setTimeout(() => {
+        this.updateMenuSign()
+      }, 10)
     },
     onSwitchDrawer (val) {
       this.show = val
