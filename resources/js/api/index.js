@@ -14,6 +14,18 @@ export function getCategories(params) {
 }
 
 /**
+ * 新建分类
+ * @param params
+ */
+export function createCategory(params) {
+  return request({
+    url: '/categories',
+    method: 'post',
+    params
+  })
+}
+
+/**
  * 删除分类
  * @param id
  * @returns {AxiosPromise}
