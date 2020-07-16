@@ -15,22 +15,28 @@
         ></common-table>
       </v-col>
     </v-row>
+    <v-dialog v-model="show_dialog" :width="$vuetify.breakpoint.mdAndUp ? '50%' : '90%'">
+      <tag-create-and-edit :current_item="current_item" @onCancel="onDialogCancel" @onSubmit="onDialogSubmit"></tag-create-and-edit>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import { deleteTag, getTags } from '../api/index'
+import { createTag, deleteTag, editTag, getTags } from '../api/index'
 import CommonTable from '../components/table/CommonTable'
+import TagCreateAndEdit from './TagCreateAndEdit'
 
 export default {
   name: 'Tags',
-  components: { CommonTable },
+  components: { TagCreateAndEdit, CommonTable },
   data () {
     return {
-      current_item: null,
+      show_dialog: false,
+      current_item: {},
       table_headers: [
         { text: 'id', value: 'id', align: 'center', sortable: true },
         { text: '名称', value: 'name', align: 'left', sortable: true },
+        { text: '使用次数', value: 'articles_count', align: 'left', sortable: false },
         { text: '操作', value: 'action', align: 'center', sortable: false },
       ],
       table_api: getTags,
@@ -58,13 +64,13 @@ export default {
         {
           sign: 'edit',
           text: '编辑',
-          tip: '编辑主题',
+          tip: '编辑标签',
           icon: 'pencil',
         },
         {
           sign: 'delete',
           text: '删除',
-          tip: '删除主题',
+          tip: '删除标签',
           icon: 'delete',
         },
       ],
@@ -82,21 +88,17 @@ export default {
     },
     onHeaderAction(params) {
       if (params.sign === 'create') {
-        this.$router.push({
-          name: 'tags-create',
-        })
+        // this.$router.push({
+        //   name: 'tags-create',
+        // })
+        this.show_dialog = true
       }
     },
     onClickAction (params) {
+      this.current_item = params.item
       if (params.sign === 'edit') {
-        this.$router.push({
-          name: 'tags-edit',
-          params: {
-            id: params.item.id
-          },
-        })
+        this.show_dialog = true
       }else if (params.sign === 'delete') {
-        this.current_item = params.item
         this.dialog = {
           show: true,
           title: '删除标签',
@@ -123,6 +125,41 @@ export default {
         })
       }
     },
+    onDialogCancel() {
+      this.current_item = {}
+      this.show_dialog = false
+    },
+    onDialogSubmit(item) {
+      if (item.id) {
+        editTag(item.id, item).then(() => {
+          this.$store.commit('setSnackbar', {
+            message: '操作成功',
+            color: 'success',
+            timeout: 1500,
+            show: true
+          })
+          this.$nextTick(() => {
+            this.show_dialog = false
+            this.$refs.custom_table.init()
+            this.current_item = {}
+          })
+        })
+      }else {
+        createTag(item).then(() => {
+          this.$store.commit('setSnackbar', {
+            message: '操作成功',
+            color: 'success',
+            timeout: 1500,
+            show: true
+          })
+          this.$nextTick(() => {
+            this.show_dialog = false
+            this.$refs.custom_table.init()
+            this.current_item = {}
+          })
+        })
+      }
+    }
   },
 }
 </script>

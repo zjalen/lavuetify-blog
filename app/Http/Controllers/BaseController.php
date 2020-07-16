@@ -7,7 +7,7 @@ use App\Http\Controllers\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class AbstractBaseController extends Controller
+class BaseController extends Controller
 {
     use ApiResponse;
 
@@ -94,6 +94,8 @@ class AbstractBaseController extends Controller
                         $builder = $builder->orderBy($column, $type);
                     }
                 }
+            } else {
+                $builder = $builder->orderBy('id', 'DESC');
             }
         }
         // 查询条件
@@ -175,8 +177,8 @@ class AbstractBaseController extends Controller
         $query = $this->buildQuery($this->getBuilder(), $filters, $this->getAllowSearchColumns(), $this->getAllowShowColumns());
         $total_count = $query->count();
         $query = $this->buildQuery($this->getBuilder(), $filters, $this->getAllowSearchColumns(), $this->getAllowShowColumns(), true);
-        $charge_orders = $query->get();
-        return $this->success(['items' => $charge_orders, 'total_count' => $total_count]);
+        $items = $query->get();
+        return $this->success(['items' => $items, 'total_count' => $total_count]);
     }
 
     public function store()

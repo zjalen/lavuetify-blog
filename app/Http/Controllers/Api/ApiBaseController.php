@@ -3,7 +3,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\AbstractBaseController;
+use App\Http\Controllers\BaseController;
 
-class ApiBaseController extends AbstractBaseController
+class ApiBaseController extends BaseController
 {}

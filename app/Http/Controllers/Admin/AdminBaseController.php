@@ -4,7 +4,7 @@
 namespace App\Http\Controllers\Admin;
 
 
-use App\Http\Controllers\AbstractBaseController;
+use App\Http\Controllers\BaseController;
 
-class AdminBaseController extends AbstractBaseController
+class AdminBaseController extends BaseController
 {}
