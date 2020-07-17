@@ -4,7 +4,6 @@
       <v-col
         cols="12"
         md="6"
-        style="overflow-y: scroll"
       >
         <v-text-field
           label="名称"
