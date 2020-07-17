@@ -10,7 +10,7 @@ let cookie_token = Cookies.get('jalen_token')
 
 export default new Vuex.Store({
   state: {
-    user: null,
+    user: {},
     token: cookie_token ? cookie_token : null,
     drawer: sessionStorage.getItem('drawer') === '1',
     dark: sessionStorage.getItem('current_theme') === 'dark',
@@ -75,6 +75,11 @@ export default new Vuex.Store({
             icon: 'link',
             sign: 'links',
           },
+          {
+            title: '用户管理',
+            icon: 'account-supervisor',
+            sign: 'users',
+          },
         ],
       },
       {
@@ -85,6 +90,11 @@ export default new Vuex.Store({
             title: '后台菜单',
             icon: 'menu-open',
             sign: 'admin-menu',
+          },
+          {
+            title: '后台用户',
+            icon: 'account',
+            sign: 'users',
           },
         ],
       },

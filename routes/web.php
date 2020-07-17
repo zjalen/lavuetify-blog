@@ -32,5 +32,7 @@ Route::group([
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', 'AuthController@me');
+    Route::get('me', 'AuthController@me');
+    Route::put('changeUserInfo', 'AuthController@changeUserInfo');
+    Route::post('resetPassword', 'AuthController@resetPassword');
 });

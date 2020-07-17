@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticated;
+use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class AdminUser extends Authenticated implements JWTSubject
@@ -16,8 +17,10 @@ class AdminUser extends Authenticated implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'username', 'email', 'password','api_token'
+        'username', 'email', 'api_token', 'avatar', 'name'
     ];
+
+    protected $appends = ['avatar_full_path'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -46,5 +49,12 @@ class AdminUser extends Authenticated implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function getAvatarFullPathAttribute()
+    {
+        $avatar = explode('storage/', $this->avatar);
+        $path = count($avatar) > 1 ? $avatar[1] : $avatar[0];
+        return Storage::disk('public')->url($path);
     }
 }
