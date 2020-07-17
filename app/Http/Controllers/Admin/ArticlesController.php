@@ -192,4 +192,6 @@ class ArticlesController extends AdminBaseController
     {
         return $this->success(['items' => Topic::all(['id', 'name'])]);
     }
+
+    // TODO 删除时脏文件图片处理
 }

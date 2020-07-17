@@ -94,7 +94,7 @@ export default new Vuex.Store({
           {
             title: '后台用户',
             icon: 'account',
-            sign: 'users',
+            sign: 'admin-users',
           },
         ],
       },

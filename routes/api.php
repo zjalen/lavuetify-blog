@@ -33,6 +33,8 @@ Route::group([
     $router->delete('pages/deleteImage', 'PagesController@deleteImage');
     $router->apiResource('pages', 'PagesController');
     $router->apiResource('links', 'LinksController');
+    $router->apiResource('users', 'UsersController')->only(['index', 'show', 'update']);
+    $router->apiResource('admin-users', 'AdminUsersController');
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

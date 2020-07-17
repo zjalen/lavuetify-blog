@@ -207,12 +207,13 @@ class BaseController extends Controller
 
     public function update($id)
     {
+        $params = request()->input();
         $model = $this->getModel();
         $model = $model->where('id', $id)->first();
         if (!$model) {
             return $this->notFond();
         }
-        $model->fill(\request()->input());
+        $model->fill($params);
         $res = $model->save();
         if (!$res) {
             return $this->failed('修改失败');

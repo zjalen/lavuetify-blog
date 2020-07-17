@@ -28,6 +28,10 @@ const routes = [
         { name: 'links-edit', path: '/links/edit/:id', component: () => import('../views/LinkCreateAndEdit') },
         { name: 'setting', path: '/setting', component: () => import('../views/AdminUserSetting') },
         { name: 'reset-password', path: '/reset-password', component: () => import('../views/AdminUserResetPassword') },
+        { name: 'users', path: '/users', component: () => import('../views/Users') },
+        { name: 'admin-users', path: '/admin-users', component: () => import('../views/AdminUsers') },
+        { name: 'admin-users-create', path: '/admin-users/create', component: () => import('../views/AdminUserCreateAndEdit') },
+        { name: 'admin-users-edit', path: '/admin-users/edit/:id', component: () => import('../views/AdminUserCreateAndEdit') },
       ],
   },
 ]

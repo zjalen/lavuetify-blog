@@ -8,6 +8,7 @@
           :api="table_api"
           :filters="table_filters"
           :bool_columns="table_bool_columns"
+          :avatar_columns="table_avatar_columns"
           :actions="table_actions"
           @headerAction="onHeaderAction"
           @action="onClickAction"
@@ -30,6 +31,7 @@ export default {
       table_headers: [
         { text: 'id', value: 'id', align: 'center', sortable: true },
         { text: '用户', value: 'user.nickname', align: 'left', sortable: false },
+        { text: '头像', value: 'avatar', align: 'center', sortable: false },
         { text: '文章', value: 'article.title', align: 'left', sortable: false},
         { text: '归属评论', value: 'belong_comment.content', align: 'left', sortable: false },
         { text: '内容', value: 'content', align: 'left', sortable: true },
@@ -41,6 +43,7 @@ export default {
       table_bool_columns: [
         'item.is_checked'
       ],
+      table_avatar_columns: ['item.avatar'],
       table_api: getComments,
       table_filters: [
         {

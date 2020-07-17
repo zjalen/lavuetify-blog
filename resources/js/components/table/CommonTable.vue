@@ -44,14 +44,13 @@
         </v-chip>
       </template>
       <template v-for="(value,key) in bool_columns" v-slot:[value]="{ item }">
-        <!--        <v-chip :key="key" small :color="getBoolColor(item[value.split('.')[1]])" dark>{{-->
-        <!--          getBoolValue(item[value.split('.')[1]])-->
-        <!--          }}-->
-        <!--        </v-chip>-->
         <v-switch :key="key" v-model="item[value.split('.')[1]]" inset @change="onSwitch(value.split('.')[1], item)"></v-switch>
       </template>
       <template v-for="(val,key) in image_columns" v-slot:[val]="{ item }">
         <v-img :key="key" :src="item[val.split('.')[1]]" aspect-ratio="1.7" class="ma-2"></v-img>
+      </template>
+      <template v-for="(val0,key) in avatar_columns" v-slot:[val0]="{ item }">
+        <v-avatar class="ma-2" :key="key"><img alt :src="item[val0.split('.')[1]]" /></v-avatar>
       </template>
       <template v-slot:item.amount="{ item }">
         <v-chip small :color="getLevelColor(item.amount)" dark>{{ item.amount }}</v-chip>
@@ -152,6 +151,12 @@ export default {
       },
     },
     image_columns: {
+      type: Array,
+      default () {
+        return []
+      },
+    },
+    avatar_columns: {
       type: Array,
       default () {
         return []

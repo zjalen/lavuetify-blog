@@ -10,6 +10,14 @@ class Comment extends BaseModel
 
     protected $with = ['user', 'article', 'belong_comment:content', 'parent:content'];
 
+    protected $appends = ['avatar'];
+
+    public function getAvatarAttribute()
+    {
+        return $this->user ? $this->user->avatar : '';
+    }
+
+
     public function article() {
         return $this->belongsTo(Article::class,'article_id','id');
     }

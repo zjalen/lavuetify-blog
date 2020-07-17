@@ -77,4 +77,6 @@ class PagesController extends AdminBaseController
         }
         return $path;
     }
+
+    // TODO 删除时脏文件图片处理
 }
