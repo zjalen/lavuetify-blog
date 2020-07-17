@@ -87,11 +87,6 @@ export default new Vuex.Store({
         current: null,
         children: [
           {
-            title: '后台菜单',
-            icon: 'menu-open',
-            sign: 'admin-menu',
-          },
-          {
             title: '后台用户',
             icon: 'account',
             sign: 'admin-users',
