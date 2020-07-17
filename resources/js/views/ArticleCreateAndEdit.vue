@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <v-form ref="form">
     <v-row>
       <v-col
         cols="12"
@@ -128,7 +128,16 @@
 </template>
 
 <script>
-import { getArticle, updateArticle, createArticle, uploadArticleImage, deleteArticleImage, getCategories, getTopics, getArticlesTagList } from '../api/article'
+import {
+  getArticle,
+  updateArticle,
+  createArticle,
+  uploadArticleImage,
+  deleteArticleImage,
+  getCategories,
+  getTopics,
+  getArticlesTagList,
+} from '../api/article'
 
 import '../scss/custom-markdown.scss'
 import { mavonEditor } from 'mavon-editor'
@@ -151,7 +160,7 @@ export default {
       is_top: false,
       is_draft: false,
       content_md: null,
-      content_html: null
+      content_html: null,
     },
     article: {},
     categories: [],
@@ -159,17 +168,26 @@ export default {
     tags: [],
     cover_file: null,
     image_url: null,
-    fileRules: [
-      value => !!value || '封面不能为空',
-      value => !value || value.size < 2000000 || '图片不能超过 2 MB!',
-    ],
     titleRules: [
-      value => !!value || '标题必填'
+      value => !!value || '标题必填',
     ],
     categoryRules: [
-      value => !!value || '分类必选'
-    ]
+      value => !!value || '分类必选',
+    ],
   }),
+  computed: {
+    fileRules () {
+      return this.image_url ?
+        [
+          value => !value || value.size < 2000000 || '图片不能超过 2 MB!',
+        ]
+        :
+        [
+          value => !!value || '封面不能为空',
+          value => !value || value.size < 2000000 || '图片不能超过 2 MB!',
+        ]
+    },
+  },
   mounted () {
     this.article_id = this.$route.params.id
     if (this.article_id) {
@@ -218,6 +236,9 @@ export default {
       history.go(-1)
     },
     onSubmit () {
+      if (!this.$refs.form.validate()) {
+        return false
+      }
       this.params = new FormData()
       if (!this.article['content_html']) {
         return this.$store.commit('setSnackbar', {
@@ -277,16 +298,16 @@ export default {
       })
     },
     imgDel (item) {
-      deleteArticleImage({image_url: item[0]}).then(() => {
+      deleteArticleImage({ image_url: item[0] }).then(() => {
         this.$store.commit('setSnackbar', {
           message: '删除成功',
           color: 'success',
           timeout: 1000,
-          show: true
+          show: true,
         })
       })
     },
-    changeData(value, render) {
+    changeData (value, render) {
       this.article.content_html = render
     },
     importHighlightStyle (style, oldStyle) {
@@ -308,7 +329,7 @@ export default {
           document.head.removeChild(link)
         }
       })
-    }
+    },
   },
 }
 </script>

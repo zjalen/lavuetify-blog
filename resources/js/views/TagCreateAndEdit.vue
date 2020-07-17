@@ -2,10 +2,11 @@
   <v-card>
     <v-card-title class="primary white--text">操作</v-card-title>
     <v-card-text>
-      <v-form class="mt-4">
+      <v-form ref="form" class="mt-4">
         <v-text-field
           label="名称"
           outlined
+          :rules="nameRules"
           v-model="item.name"
         >
         </v-text-field>
@@ -31,7 +32,10 @@ export default {
     }
   },
   data: () => ({
-    item: {}
+    item: {},
+    nameRules: [
+      value => !!value || '必填'
+    ]
   }),
   watch: {
     current_item() {
@@ -46,6 +50,9 @@ export default {
       this.$emit('onCancel')
     },
     onSubmit () {
+      if (!this.$refs.form.validate()) {
+        return false
+      }
       this.$emit('onSubmit', this.item)
     },
   },

@@ -27,6 +27,7 @@
         <v-text-field
           label="排序"
           outlined
+          type="number"
           :rules="numberRules"
           hint="数字越小越靠前，不填默认为 99"
           v-model="item.order"

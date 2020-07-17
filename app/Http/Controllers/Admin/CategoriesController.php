@@ -38,7 +38,9 @@ class CategoriesController extends AdminBaseController
         try {
             DB::transaction(function () use ($model) {
                 // 插入序列变动
-                DB::table('categories')->where('level', $model->level)->where('order', '>=', $model->order)->increment('order');
+                if (DB::table('categories')->where('level', $model->level)->where('order', $model->order)->count() > 0) {
+                    DB::table('categories')->where('level', $model->level)->where('order', '>=', $model->order)->increment('order');
+                }
                 $model->save();
             });
             return $this->created($model);
@@ -66,7 +68,9 @@ class CategoriesController extends AdminBaseController
         try {
             DB::transaction(function () use ($model) {
                 // 插入序列变动
-                DB::table('categories')->where('level', $model->level)->where('order', '>=', $model->order)->increment('order');
+                if (DB::table('categories')->where('level', $model->level)->where('order', $model->order)->count() > 0) {
+                    DB::table('categories')->where('level', $model->level)->where('order', '>=', $model->order)->increment('order');
+                }
                 $model->save();
             });
             return $this->success($model);

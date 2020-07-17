@@ -32,7 +32,7 @@
             编辑内容
           </v-card-title>
           <v-card-text class="mt-4">
-            <v-form>
+            <v-form ref="form">
               <v-select
                 label="父级"
                 hint="留空时为一级分类"
@@ -46,6 +46,7 @@
               <v-text-field
                 label="名称"
                 outlined
+                :rules="nameRules"
                 v-model="current_item.name"
               ></v-text-field>
               <v-text-field
@@ -78,7 +79,10 @@ export default {
     return {
       categories: [],
       current_item: null,
-      activeCategories: []
+      activeCategories: [],
+      nameRules: [
+        v => !!v || '必填'
+      ]
     }
   },
   computed: {
@@ -148,6 +152,9 @@ export default {
       }
     },
     onSaveCategory() {
+      if (!this.$refs.form.validate()) {
+        return false
+      }
       if (this.current_item) {
         this.current_item.show_as_menu = this.current_item.show_as_menu ? 1 : 0
         if (!this.current_item.id) {

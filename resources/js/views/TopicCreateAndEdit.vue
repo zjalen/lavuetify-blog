@@ -53,11 +53,20 @@ export default {
     nameRules: [
       value => !!value || '名称不能为空',
     ],
-    fileRules: [
-      value => !!value || '封面不能为空',
-      value => !value || value.size < 2000000 || '图片不能超过 2 MB!',
-    ],
   }),
+  computed: {
+    fileRules () {
+      return this.image_url ?
+        [
+          value => !value || value.size < 2000000 || '图片不能超过 2 MB!',
+        ]
+        :
+        [
+          value => !!value || '封面不能为空',
+          value => !value || value.size < 2000000 || '图片不能超过 2 MB!',
+        ]
+    },
+  },
   mounted () {
     if (this.$route.params.id) {
       getTopic(this.$route.params.id).then(response => {
@@ -84,9 +93,8 @@ export default {
       history.go(-1)
     },
     onSubmit() {
-      if (!this.item.name || (!this.cover_file && !this.image_url)) {
-        this.$refs.form.validate()
-        return
+      if (!this.$refs.form.validate()) {
+        return false
       }
       let params = new FormData
       params.append('name', this.item.name)

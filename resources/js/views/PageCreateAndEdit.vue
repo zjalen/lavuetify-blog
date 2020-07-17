@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <v-form ref="form">
     <v-row>
       <v-col
         cols="12"
@@ -98,6 +98,9 @@ export default {
       history.go(-1)
     },
     onSubmit () {
+      if (!this.$refs.form.validate()) {
+        return false
+      }
       this.params = new FormData()
       if (!this.page['content_html']) {
         return this.$store.commit('setSnackbar', {
