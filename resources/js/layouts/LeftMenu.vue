@@ -35,68 +35,11 @@ export default {
   data () {
     return {
       show: false,
-      menu_list: [
-        {
-          group: '前端管理',
-          current: null,
-          children: [
-            {
-              title: '首页',
-              icon: 'home',
-              sign: 'home',
-            },
-            {
-              title: '文章管理',
-              icon: 'pencil-outline',
-              sign: 'articles',
-            },
-            {
-              title: '评论管理',
-              icon: 'message-reply',
-              sign: 'comments',
-            },
-            {
-              title: '文章分类',
-              icon: 'menu',
-              sign: 'categories',
-            },
-            {
-              title: '标签管理',
-              icon: 'tag',
-              sign: 'tags',
-            },
-            {
-              title: '主题管理',
-              icon: 'file-document',
-              sign: 'topics',
-            },
-            {
-              title: '页面管理',
-              icon: 'newspaper-variant',
-              sign: 'pages',
-            },
-            {
-              title: '友链管理',
-              icon: 'link',
-              sign: 'links',
-            },
-          ],
-        },
-        {
-          group: '后台管理',
-          current: null,
-          children: [
-            {
-              title: '后台菜单',
-              icon: 'menu-open',
-              sign: 'admin-menu',
-            },
-          ],
-        },
-      ],
+      menu_list: []
     }
   },
   mounted () {
+    this.menu_list = this.$store.getters.menu_list
     this.show = this.$store.getters.drawer
     this.$VM.$on('switchDrawer', this.onSwitchDrawer)
     this.updateMenuSign()

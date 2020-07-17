@@ -22,11 +22,17 @@ Route::group([
     $router->delete('articles/deleteImage', 'ArticlesController@deleteImage');
     $router->get('articles/count', 'ArticlesController@count');
     $router->get('articles/tags', 'ArticlesController@tags');
+    $router->get('articles/categories', 'ArticlesController@categories');
+    $router->get('articles/topics', 'ArticlesController@topics');
     $router->apiResource('articles', 'ArticlesController');
     $router->apiResource('categories', 'CategoriesController');
     $router->apiResource('topics', 'TopicsController');
     $router->apiResource('tags', 'TagsController');
     $router->apiResource('comments', 'CommentsController');
+    $router->post('pages/uploadImage', 'PagesController@uploadImage');
+    $router->delete('pages/deleteImage', 'PagesController@deleteImage');
+    $router->apiResource('pages', 'PagesController');
+    $router->apiResource('links', 'LinksController');
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

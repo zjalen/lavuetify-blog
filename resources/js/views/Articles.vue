@@ -36,7 +36,7 @@
 <script>
 import CardWithIcon from '../components/card/CardWithIcon'
 
-import { getArticles, deleteArticle, getArticlesCount, updateArticle } from '../api/index'
+import { getArticles, deleteArticle, getArticlesCount, updateArticle } from '../api/article'
 import CommonTable from '../components/table/CommonTable'
 
 export default {

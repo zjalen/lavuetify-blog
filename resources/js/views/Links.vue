@@ -16,19 +16,19 @@
       </v-col>
     </v-row>
     <v-dialog v-model="show_dialog" :width="$vuetify.breakpoint.mdAndUp ? '50%' : '90%'">
-      <tag-create-and-edit :current_item="current_item" @onCancel="onDialogCancel" @onSubmit="onDialogSubmit"></tag-create-and-edit>
+      <link-create-and-edit :current_item="current_item" @onCancel="onDialogCancel" @onSubmit="onDialogSubmit"></link-create-and-edit>
     </v-dialog>
   </div>
 </template>
 
 <script>
-import { createTag, deleteTag, updatetTag, getTags } from '../api/tag'
+import { createLink, deleteLink, updateLink, getLinks } from '../api/link'
 import CommonTable from '../components/table/CommonTable'
-import TagCreateAndEdit from './TagCreateAndEdit'
+import LinkCreateAndEdit from './LinkCreateAndEdit'
 
 export default {
-  name: 'Tags',
-  components: { TagCreateAndEdit, CommonTable },
+  name: 'Links',
+  components: { LinkCreateAndEdit, CommonTable },
   data () {
     return {
       show_dialog: false,
@@ -36,11 +36,13 @@ export default {
       table_headers: [
         { text: 'id', value: 'id', align: 'center', sortable: true },
         { text: '名称', value: 'name', align: 'left', sortable: true },
-        { text: '使用次数', value: 'articles_count', align: 'left', sortable: false },
+        { text: '简述', value: 'description', align: 'left', sortable: true },
+        { text: 'url', value: 'url', align: 'left', sortable: true },
+        { text: '排序', value: 'order', align: 'left', sortable: true },
         { text: '操作', value: 'action', align: 'center', sortable: false },
       ],
-      table_api: getTags,
-      table_chip_columns: ['item.name'],
+      table_api: getLinks,
+      table_chip_columns: ['item.name', 'item.order'],
       table_filters: [
         {
           column: 'name',
@@ -55,8 +57,8 @@ export default {
       table_head_actions: [
         {
           sign: 'create',
-          text: '添加标签',
-          tip: '添加新标签',
+          text: '添加',
+          tip: '添加新友链',
           icon: 'plus',
         },
       ],
@@ -64,13 +66,13 @@ export default {
         {
           sign: 'edit',
           text: '编辑',
-          tip: '编辑标签',
+          tip: '编辑友链',
           icon: 'pencil',
         },
         {
           sign: 'delete',
           text: '删除',
-          tip: '删除标签',
+          tip: '删除友链',
           icon: 'delete',
         },
       ],
@@ -101,9 +103,9 @@ export default {
       }else if (params.sign === 'delete') {
         this.dialog = {
           show: true,
-          title: '删除标签',
-          text: '只删除主题，关联文章自动解绑，确定删除吗？',
-          sign: 'deleteTag'
+          title: '删除友链',
+          text: '确定删除吗？',
+          sign: 'deleteLink'
         }
         this.$store.commit('setDialog', this.dialog)
       }
@@ -111,8 +113,8 @@ export default {
     onDialogConfirm(sign) {
       this.dialog.show = false
       this.$store.commit('setDialog', this.dialog)
-      if (sign === 'deleteTag') {
-        deleteTag(this.current_item.id).then(() => {
+      if (sign === 'deleteLink') {
+        deleteLink(this.current_item.id).then(() => {
           this.$store.commit('setSnackbar', {
             message: '删除成功',
             color: 'success',
@@ -130,8 +132,13 @@ export default {
       this.show_dialog = false
     },
     onDialogSubmit(item) {
+      if (!item.order) {
+        item.order = 99
+      }else {
+        item.order = Number(item.order)
+      }
       if (item.id) {
-        updatetTag(item.id, item).then(() => {
+        updateLink(item.id, item).then(() => {
           this.$store.commit('setSnackbar', {
             message: '操作成功',
             color: 'success',
@@ -145,7 +152,7 @@ export default {
           })
         })
       }else {
-        createTag(item).then(() => {
+        createLink(item).then(() => {
           this.$store.commit('setSnackbar', {
             message: '操作成功',
             color: 'success',

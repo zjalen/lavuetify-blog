@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { getTopics, deleteTopic } from '../api/index'
+import { getTopics, deleteTopic } from '../api/topic'
 import CommonTable from '../components/table/CommonTable'
 
 export default {

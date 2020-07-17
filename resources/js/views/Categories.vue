@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { getCategories, deleteCategory, editCategory, createCategory } from '../api/index'
+import { getCategories, deleteCategory, updateCategory, createCategory } from '../api/category'
 
 export default {
   name: 'Categories',
@@ -164,7 +164,7 @@ export default {
             })
           })
         }else {
-          editCategory(this.current_item.id, this.current_item).then(() => {
+          updateCategory(this.current_item.id, this.current_item).then(() => {
             this.$store.commit('setSnackbar', {
               message: '保存成功',
               color: 'success',

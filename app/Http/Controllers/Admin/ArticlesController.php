@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\Tag;
+use App\Models\Topic;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -64,7 +66,7 @@ class ArticlesController extends AdminBaseController
                 }, $tagsArray);
                 $article->tags()->sync($tagIds);
             }
-            return $this->created($res);
+            return $this->created($article);
         }else {
             Storage::disk('public')->delete($params['cover']);
             return $this->failed('更新失败');
@@ -110,7 +112,7 @@ class ArticlesController extends AdminBaseController
                 }, $tagsArray);
             }
             $article->tags()->sync($tagIds);
-            return $this->success($res);
+            return $this->success($article);
         }else {
             Storage::disk('public')->delete($params['cover']);
             return $this->failed('更新失败');
@@ -179,5 +181,15 @@ class ArticlesController extends AdminBaseController
     public function tags()
     {
         return $this->success(['items' => Tag::all()->pluck('name')]);
+    }
+
+    public function categories()
+    {
+        return $this->success(['items' => Category::where('level', 1)->orderBy('order')->get(['id', 'name'])]);
+    }
+
+    public function topics()
+    {
+        return $this->success(['items' => Topic::all(['id', 'name'])]);
     }
 }

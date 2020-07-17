@@ -5,7 +5,6 @@
         cols="12"
         md="8"
         lg="9"
-        style="overflow-y: scroll"
       >
         <v-text-field
           label="标题"
@@ -129,7 +128,7 @@
 </template>
 
 <script>
-import { getArticle, updateArticle, createArticle, uploadArticleImage, deleteArticleImage, getCategories, getTopics, getArticlesTagList } from '../api'
+import { getArticle, updateArticle, createArticle, uploadArticleImage, deleteArticleImage, getCategories, getTopics, getArticlesTagList } from '../api/article'
 
 import '../scss/custom-markdown.scss'
 import { mavonEditor } from 'mavon-editor'

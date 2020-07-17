@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { createTopic, getTopic, updateTopic } from '../api'
+import { createTopic, getTopic, updateTopic } from '../api/topic'
 
 export default {
   name: 'TopicCreateAndEdit',
