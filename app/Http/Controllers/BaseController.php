@@ -148,8 +148,11 @@ class BaseController extends Controller
                                                 });
                                             }
 
-                                        } else {
-                                            $builder = $builder->$v['relation_name']()->where($v['column'], $v['value']);
+                                        } else if (array_key_exists('value', $v)) {
+                                            $relationName = $v['relation_name'];
+                                            $builder = $builder->whereHas($relationName, function (Builder $query) use ($v) {
+                                                return $query->where($v['column'], $v['value']);
+                                            });
                                         }
                                     }
                                     break;
