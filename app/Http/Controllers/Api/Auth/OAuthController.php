@@ -39,12 +39,13 @@ class OAuthController extends Controller
     }
 
     public function callback($type) {
+        $url = env('FRONT_URL', 'www.jalen.top');
         $socialite = new SocialiteManager(config('socialite'));
         try {
             $user_info = $socialite->driver($type)->user();
         }catch (Exception $e) {
             Log::error($e);
-            return redirect(session('targetUrl', url('/')));
+            return redirect($url);
         }
         $data = [
             'type'=>$type,
@@ -59,10 +60,9 @@ class OAuthController extends Controller
         $user->avatar=$user_info->getAvatar();
         $user->save();
         if (!$user->is_black) {
-            $url = 'http://localhost:3001';
             return redirect($url."/login?path=".session('targetUrl')."&access_token=".$user->access_token.'&type='.$type);
         }
-        return redirect(session('targetUrl', url('/')));
+        return redirect($url);
     }
 
     /**
