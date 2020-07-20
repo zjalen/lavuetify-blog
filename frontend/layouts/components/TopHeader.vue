@@ -122,8 +122,8 @@
               <a href="javascript:" @click="login('github')">
                 <div class="social-logo">
                   <div class="social-div">
-                    <img style="width: 60px;" src="../../static/images/github.png">
-                    <img style="width: 60px;" src="../../static/images/github_hover.png">
+                    <img style="width: 60px;" src="./images/github.png">
+                    <img style="width: 60px;" src="./images/github_hover.png">
                   </div>
                   <div>Github</div>
                 </div>
@@ -131,8 +131,8 @@
               <a href="javascript:" @click="login('qq')">
                 <div class="social-logo">
                   <div class="social-div">
-                    <img style="width: 60px;" src="../../static/images/qq.png">
-                    <img style="width: 60px;" src="../../static/images/qq_hover.png">
+                    <img style="width: 60px;" src="./images/qq.png">
+                    <img style="width: 60px;" src="./images/qq_hover.png">
                   </div>
                   <div>QQ</div>
                 </div>
@@ -140,8 +140,8 @@
               <a href="javascript:" @click="login('weibo')">
                 <div class="social-logo">
                   <div class="social-div">
-                    <img style="width: 60px;" src="../../static/images/weibo.png">
-                    <img style="width: 60px;" src="../../static/images/weibo_hover.png">
+                    <img style="width: 60px;" src="./images/weibo.png">
+                    <img style="width: 60px;" src="./images/weibo_hover.png">
                   </div>
                   <div>微博</div>
                 </div>
