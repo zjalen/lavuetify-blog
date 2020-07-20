@@ -112,6 +112,85 @@
           </div>
         </v-card>
       </v-skeleton-loader>
+      <v-card>
+        <v-card-subtitle>评论区</v-card-subtitle>
+        <v-card-text>
+          <v-menu v-if="user" offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-avatar
+                v-bind="attrs"
+                v-on="on"
+              >
+                <img
+                  class="pa-1"
+                  :src="user.avatar"
+                  :alt="user.nickname"
+                >
+              </v-avatar>
+            </template>
+            <v-list>
+              <v-list-item
+                @click.stop="logout"
+              >
+                <v-list-item-title class="d-flex justify-center align-center">
+                  <v-icon class="mr-2">
+                    mdi-logout
+                  </v-icon>
+                  退出登录
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <v-menu v-else offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                title="使用第三方登录"
+                icon
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon class="display-1">
+                  mdi-account
+                </v-icon>
+              </v-btn>
+            </template>
+            <v-card class="social-flex">
+              <a href="javascript:" @click="login('github')">
+                <div class="social-logo">
+                  <div class="social-div">
+                    <img style="width: 60px;" src="/images/github.png">
+                    <img style="width: 60px;" src="/images/github_hover.png">
+                  </div>
+                  <div>Github</div>
+                </div>
+              </a>
+              <a href="javascript:" @click="login('qq')">
+                <div class="social-logo">
+                  <div class="social-div">
+                    <img style="width: 60px;" src="/images/qq.png">
+                    <img style="width: 60px;" src="/images/qq_hover.png">
+                  </div>
+                  <div>QQ</div>
+                </div>
+              </a>
+              <a href="javascript:" @click="login('weibo')">
+                <div class="social-logo">
+                  <div class="social-div">
+                    <img style="width: 60px;" src="/images/weibo.png">
+                    <img style="width: 60px;" src="/images/weibo_hover.png">
+                  </div>
+                  <div>微博</div>
+                </div>
+              </a>
+            </v-card>
+          </v-menu>
+          <v-textarea />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn>提交</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-col>
     <my-image-viewer :show-img="showImgView" :img-src="imgSrc" @hideImg="hideImg" />
   </v-row>
@@ -183,6 +262,7 @@ export default {
       imgSrc: null,
       showImgView: false,
       loading: true,
+      user: null,
       card_style: 'border: 1px solid #f2f6fc'
     }
   },
@@ -220,6 +300,7 @@ export default {
   },
   mounted () {
     this.loading = false
+    this.user = this.$store.state.user
     this.card_style = this.$vuetify.theme.isDark
       ? 'border: 1px solid #6d6e6f'
       : 'border: 1px solid #f2f6fc'
@@ -301,6 +382,25 @@ export default {
       //     // document.head.removeChild(links[i])
       //   }
       // }
+    },
+    login (type) {
+      let page = window.location.pathname
+      page = encodeURIComponent(page)
+      // page = page.substring(1);
+      const url = process.env.API_HOST + '/oauth/login/' + type + '?frontend_url=' + page
+      console.log(url)
+      window.location.href = url
+    },
+    logout () {
+      const type = this.$store.state.user.type
+      const accessToken = this.$store.state.user.access_token
+      this.$api.logout(type, accessToken).then(() => {
+        this.$store.dispatch('actionSetUser', null)
+        location.reload()
+      }).catch(() => {
+        this.$store.dispatch('actionSetUser', null)
+        location.reload()
+      })
     }
   },
   head () {
