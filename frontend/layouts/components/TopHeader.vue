@@ -79,11 +79,75 @@
             </div>
           </v-flex>
           <v-spacer />
-          <v-btn title="Github" media icon target="_blank" href="https://github.com/zjalen/vuetify-blog">
-            <v-icon class="display-1">
-              mdi-github
-            </v-icon>
-          </v-btn>
+          <v-menu v-if="user" offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-avatar
+                v-bind="attrs"
+                v-on="on"
+              >
+                <img
+                  class="pa-1"
+                  :src="user.avatar"
+                  :alt="user.nickname"
+                >
+              </v-avatar>
+            </template>
+            <v-list>
+              <v-list-item
+                @click.stop="logout"
+              >
+                <v-list-item-title class="d-flex justify-center align-center">
+                  <v-icon class="mr-2">
+                    mdi-logout
+                  </v-icon>
+                  退出登录
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <v-menu v-else offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                title="使用第三方登录"
+                icon
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon class="display-1">
+                  mdi-account
+                </v-icon>
+              </v-btn>
+            </template>
+            <v-card class="social-flex">
+              <a href="javascript:" @click="login('github')">
+                <div class="social-logo">
+                  <div class="social-div">
+                    <img style="width: 60px;" src="../../static/images/github.png">
+                    <img style="width: 60px;" src="../../static/images/github_hover.png">
+                  </div>
+                  <div>Github</div>
+                </div>
+              </a>
+              <a href="javascript:" @click="login('qq')">
+                <div class="social-logo">
+                  <div class="social-div">
+                    <img style="width: 60px;" src="../../static/images/qq.png">
+                    <img style="width: 60px;" src="../../static/images/qq_hover.png">
+                  </div>
+                  <div>QQ</div>
+                </div>
+              </a>
+              <a href="javascript:" @click="login('weibo')">
+                <div class="social-logo">
+                  <div class="social-div">
+                    <img style="width: 60px;" src="../../static/images/weibo.png">
+                    <img style="width: 60px;" src="../../static/images/weibo_hover.png">
+                  </div>
+                  <div>微博</div>
+                </div>
+              </a>
+            </v-card>
+          </v-menu>
           <v-btn title="切换暗色/亮色主题" icon @click.stop="switchTheme">
             <v-icon class="display-1">
               mdi-brightness-{{ icon_light }}
@@ -166,27 +230,37 @@ export default {
       title: 'JALEN博客',
       slogan: '他沉默，随手写下一行 <code>Hello</code>, <code>World</code>!',
       drawer: false,
-      subIcon: 'chevron-down'
+      subIcon: 'chevron-down',
+      user: null,
+      cateArray: [],
+      current_menu_index: null,
+      icon_light: null
     }
   },
   computed: {
-    current_menu_index: {
-      get () {
-        return this.$store.state.current_menu_index
-      },
-      set () {
-        return false
-      }
-    },
-    cateArray () {
-      return this.$store.state.menus
-    },
-    icon_light () {
-      return this.$store.state.dark ? 4 : 7
-    }
+    // current_menu_index: {
+    //   get () {
+    //     return this.$store.state.current_menu_index
+    //   },
+    //   set () {
+    //     return false
+    //   }
+    // },
+    // icon_light () {
+    //   return this.$store.state.dark ? 4 : 7
+    // }
   },
   mounted () {
     this.switchMenu()
+    this.user = this.$store.state.user
+    this.cateArray = this.$store.state.menus
+    this.current_menu_index = this.$store.state.current_menu_index
+    this.icon_light = this.$store.state.dark ? 4 : 7
+    // sessionStorage.setItem('userInfo', null)
+    // if (sessionStorage.getItem('userInfo')) {
+    //   this.user = JSON.parse(sessionStorage.getItem('userInfo'))
+    //   this.$store.commit('setUser', this.user)
+    // }
   },
   methods: {
     switchTheme () {
@@ -234,6 +308,22 @@ export default {
         rt.query.category = menu.name
       }
       this.$router.push(rt)
+    },
+    login (type) {
+      let page = window.location.pathname
+      page = encodeURIComponent(page)
+      // page = page.substring(1);
+      const url = process.env.API_HOST + '/oauth/login/' + type + '?frontend_url=' + page
+      console.log(url)
+      window.location.href = url
+    },
+    logout () {
+      const type = this.$store.state.user.type
+      const accessToken = this.$store.state.user.access_token
+      this.$api.logout(type, accessToken).then(() => {
+        this.$store.dispatch('actionSetUser', null)
+        location.reload()
+      })
     }
   }
 }
@@ -248,6 +338,10 @@ export default {
     color: var(--v-primary-lighten3);
   }
 
+  a {
+    text-decoration: unset;
+  }
+
   #particles-js {
     position: absolute;
     background-color: var(--v-secondary-base);
@@ -257,5 +351,69 @@ export default {
     bottom: 0;
     z-index: -1;
     height: 248px;
+  }
+
+  .social-flex {
+    display: flex;
+    justify-content: space-between;
+
+    .social-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 5px;
+      color: #9a9a9a;
+
+      &:hover {
+        background-color: var(--v-primary-base);
+        color: #fff;
+
+        .social-div {
+
+          img:last-child {
+            opacity: 1;
+          }
+
+          img:first-child {
+            opacity: 0;
+          }
+        }
+      }
+
+      .social-div {
+        position: relative;
+        width: 60px;
+        height: 60px;
+
+        img:last-child {
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0;
+          z-index: 1;
+          transition: all 0.3s ease-in;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+
+        img:first-child {
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 1;
+          z-index: 1;
+          transition: all 0.3s ease-in;
+
+          &:hover {
+            opacity: 0;
+          }
+        }
+      }
+    }
   }
 </style>

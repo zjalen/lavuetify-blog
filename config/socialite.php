@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: jialinzhang
@@ -6,19 +7,19 @@
  * Time: 00:09
  */
 return [
-    'github'=>[
-        'client_id'=>'22e3d161106488320f2b',
-        'client_secret'=>'48c28041a084d57bbb250db47e0d0a745b148c24',
-        'redirect'      => 'https://www.jalen.top/oauth/callback/github',
+    'github' => [
+        'client_id' => env('GITHUB_CLIENT_ID', ''),
+        'client_secret' => env('GITHUB_CLIENT_SECRET', ''),
+        'redirect'      => env('GITHUB_REDIRECT_URL', ''),
     ],
-    'qq'=> [
-        'client_id'=>'101504364',
-        'client_secret'=>'46b5afc5684bac96a7d2c690c4f97e8e',
-        'redirect'      => 'https://www.jalen.top/oauth/callback/qq',
+    'qq' => [
+        'client_id' => env('QQ_CLIENT_ID', ''),
+        'client_secret' => env('QQ_CLIENT_SECRET', ''),
+        'redirect'      => env('QQ_REDIRECT_URL', ''),
     ],
-    'weibo'=> [
-        'client_id'=>'2752048964',
-        'client_secret'=>'58bf168f5279d14704f0e88935c709fb',
-        'redirect'      => 'https://www.jalen.top/oauth/callback/weibo',
+    'weibo' => [
+        'client_id' => env('WEIBO_CLIENT_ID', ''),
+        'client_secret' => env('WEIBO_CLIENT_SECRET', ''),
+        'redirect'      => env('WEIBO_REDIRECT_URL', ''),
     ]
 ];

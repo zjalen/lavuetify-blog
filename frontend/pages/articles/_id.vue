@@ -51,7 +51,7 @@
           <v-divider class="my-3" />
 
           <!-- eslint-disable-next-line -->
-          <div class="md markdown-body" v-html="article.content_html" />
+          <div id="article-content" class="md markdown-body" v-html="article.content_html" />
 
           <v-divider class="my-3" />
           <div class="notice">
@@ -267,7 +267,8 @@ export default {
       this.showImgView = false
     },
     addImgClickEvent () {
-      const objs = document.getElementsByTagName('img')
+      const article = document.getElementById('article-content')
+      const objs = article.getElementsByTagName('img')
       Array.from(objs).forEach((obj) => {
         obj.onclick = () => {
           this.showImgView = true

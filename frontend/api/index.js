@@ -15,6 +15,16 @@ export default function ($axios) {
     },
     getLinks: () => {
       return $axios.get('/links')
+    },
+    logout: (type, accessToken) => {
+      $axios.setHeader('access_token', accessToken)
+      $axios.setHeader('type', type)
+      return $axios.get('/oauth/logout')
+    },
+    getUserInfoByAccessToken: (type, accessToken) => {
+      $axios.setHeader('access_token', accessToken)
+      $axios.setHeader('type', type)
+      return $axios.get('/oauth/me')
     }
   }
 }

@@ -41,6 +41,7 @@ export default {
   plugins: [
     // { src: '~/plugins/vuetify', mode: 'server' },
     { src: '~/plugins/vue-particles', mode: 'client' },
+    { src: '~/plugins/store-cache', mode: 'client' },
     { src: '~/plugins/axios' }
   ],
   /*

@@ -37,10 +37,6 @@ Route::group([
     $router->apiResource('admin-users', 'AdminUsersController');
 });
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 //Route::apiResource('articles', ArticlesController::class)->only(['index', 'show']);
 Route::namespace('Api')->group(function (\Illuminate\Routing\Router $router) {
     // 在 「App\Http\Controllers\Api」 命名空间下的控制器

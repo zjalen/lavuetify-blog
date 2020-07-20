@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Routing\Router;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -35,4 +37,22 @@ Route::group([
     Route::get('me', 'AuthController@me');
     Route::put('changeUserInfo', 'AuthController@changeUserInfo');
     Route::post('resetPassword', 'AuthController@resetPassword');
+});
+
+Route::group([
+    'prefix'     => '',
+    'middleware' => ['web'],
+    'namespace'  => 'Api\Auth',
+], function (Router $router) {
+    $router->get('oauth/login/{type}', 'OAuthController@login');
+    $router->get('oauth/callback/{type}', 'OAuthController@callback');
+});
+
+Route::group([
+    'prefix'     => 'api',
+    'middleware' => ['oauth'],
+    'namespace'  => 'Api\Auth',
+], function (Router $router) {
+    $router->get('oauth/logout', 'OAuthController@logout');
+    $router->get('oauth/me', 'OAuthController@me');
 });

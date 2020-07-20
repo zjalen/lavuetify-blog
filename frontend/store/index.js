@@ -12,13 +12,17 @@ export const state = () => ({
   categories: null,
   pages: null,
   topics: null,
-  articles: null
+  articles: null,
+  user: null
 })
 
 export const mutations = {
   // 这里是同步 set 方法，通过 commit 方式触发 this.$store.commit('setToken', token)
   setMounting (state, status) {
     state.mounting = status
+  },
+  setUser (state, data) {
+    state.user = data
   },
   setLoading (state, status) {
     state.loading = status
@@ -51,6 +55,10 @@ export const actions = {
   },
   actionSetLoading ({ commit }, status) {
     commit('setLoading', status)
+  },
+  actionSetUser ({ commit }, data) {
+    // if (data) { sessionStorage.setItem('userInfo', JSON.stringify(data)) } else { sessionStorage.removeItem('userInfo') }
+    commit('setUser', data)
   },
   actionSetMenus ({ commit }, categories) {
     categories.unshift({
@@ -101,7 +109,7 @@ export const actions = {
   },
   actionSetDarkTheme ({ commit }, data) {
     commit('setDarkTheme', data)
-    const theme = data ? 'dark' : 'light'
-    sessionStorage.setItem('current_theme', theme)
+    // const theme = data ? 'dark' : 'light'
+    // sessionStorage.setItem('current_theme', theme)
   }
 }
