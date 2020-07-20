@@ -39,7 +39,7 @@ class OAuthController extends Controller
     }
 
     public function callback($type) {
-        $url = env('FRONT_URL', 'www.jalen.top');
+        $url = env('FRONT_URL', 'https://www.jalen.top');
         $socialite = new SocialiteManager(config('socialite'));
         try {
             $user_info = $socialite->driver($type)->user();
