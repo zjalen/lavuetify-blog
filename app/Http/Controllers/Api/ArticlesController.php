@@ -59,8 +59,8 @@ class ArticlesController extends ApiBaseController
     public function comments($article_id)
     {
         $result = [];
-        $this->comments = Comment::where('article_id', $article_id)->get();
-        $top_comments = $this->comments->where('level', 0)->collect();
+        $this->comments = Comment::where('article_id', $article_id)->orderByDesc('id')->get();
+        $top_comments = $this->comments->where('level', 0)->sortByDesc('id')->collect();
         foreach($top_comments as $top_comment) {
             $top_comment->children = $this->getNodeTree($top_comment->id);
             $res = json_decode($top_comment, true);

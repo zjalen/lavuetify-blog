@@ -296,6 +296,7 @@ export default {
       if (!this.user) {
         const snackbar = this.snackbar
         snackbar.message = '请先点击头像登录再评论'
+        snackbar.color = 'error'
         snackbar.show = true
         this.snackbar = snackbar
         return
@@ -312,7 +313,13 @@ export default {
       const type = this.$store.state.user.type
       const accessToken = this.$store.state.user.access_token
       this.$api.commentSubmit(type, accessToken, this.submitParams).then(() => {
+        const snackbar = this.snackbar
+        snackbar.message = '评论成功'
+        snackbar.color = 'success'
+        snackbar.show = true
+        this.snackbar = snackbar
         this.loadComments()
+        this.submitParams.content = ''
         this.onDialogClose()
       })
     },
