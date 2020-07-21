@@ -73,7 +73,7 @@ export default {
   methods: {}
 }
 </script>
-<style>
+<style lang="scss" scoped>
   .header {
     height: 168px;
     background-color: rgba(0, 0, 0, 0) !important;

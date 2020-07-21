@@ -1,7 +1,7 @@
 export const state = () => ({
   // 这里放全局参数
   mounting: false,
-  loading: true,
+  loading: false,
   menus: [],
   dark: false,
   current_menu_index: 0,
@@ -75,6 +75,11 @@ export const actions = {
       name: '友链',
       type: 'page',
       path: '/links'
+    })
+    categories.push({
+      name: '留言区',
+      type: 'page',
+      path: '/comment-page'
     })
     commit('setMenus', categories)
   },

@@ -165,30 +165,26 @@ export default {
       drawer: false,
       subIcon: 'chevron-down',
       user: null,
-      cateArray: [],
-      current_menu_index: null,
-      icon_light: null
+      cateArray: []
     }
   },
   computed: {
-    // current_menu_index: {
-    //   get () {
-    //     return this.$store.state.current_menu_index
-    //   },
-    //   set () {
-    //     return false
-    //   }
-    // },
-    // icon_light () {
-    //   return this.$store.state.dark ? 4 : 7
-    // }
+    current_menu_index: {
+      get () {
+        return this.$store.state.current_menu_index
+      },
+      set () {
+        return false
+      }
+    },
+    icon_light () {
+      return this.$store.state.dark ? 4 : 7
+    }
   },
   mounted () {
     this.switchMenu()
     this.user = this.$store.state.user
     this.cateArray = this.$store.state.menus
-    this.current_menu_index = this.$store.state.current_menu_index
-    this.icon_light = this.$store.state.dark ? 4 : 7
     // sessionStorage.setItem('userInfo', null)
     // if (sessionStorage.getItem('userInfo')) {
     //   this.user = JSON.parse(sessionStorage.getItem('userInfo'))

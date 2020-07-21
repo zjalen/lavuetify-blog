@@ -26,7 +26,7 @@
         </div>
         <v-spacer />
         <v-btn
-          outlined
+          text
           color="primary"
           href="javascript:"
           @click="onReply(comment.id, comment.id)"

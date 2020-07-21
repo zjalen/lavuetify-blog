@@ -6,110 +6,12 @@
     <v-col cols="12">
       <v-skeleton-loader class="mx-auto" :loading="loading" type="article">
         <v-card elevation="1" :style="card_style" class="pa-4 pa-sm-11">
-          <div class="text-center font-regular headline">
+          <v-card-title class="pl-0 headline">
             {{ article.title }}
-          </div>
-          <div class="text-right font-weight-light body-1 pt-3">
-            <v-icon left>
-              mdi-clock-outline
-            </v-icon>
-            {{ article.created_at }}
-          </div>
-          <div
-            v-if="article.topic || article.category"
-            cols="12"
-            class="d-flex flex-sm-row flex-column-reverse py-3"
-          >
-            <v-btn
-              v-if="article.topic"
-              small
-              class="mb-2"
-              outlined
-              color="tertiary"
-              @click="onTopicClick(article.topic.name)"
-            >
-              <v-icon left>
-                mdi-file-document
-              </v-icon>
-              主题：{{ article.topic.name }}
-            </v-btn>
-            <v-spacer />
-            <v-btn
-              v-if="article.category"
-              small
-              class="mb-2"
-              outlined
-              color="secondary"
-              @click="$router.push({name: 'cate', params: {id: article.category_id}})"
-            >
-              <v-icon left>
-                mdi-menu
-              </v-icon>
-              分类：{{ article.category.name }}
-            </v-btn>
-          </div>
-          <v-divider class="my-3" />
+          </v-card-title>
 
           <!-- eslint-disable-next-line -->
           <div id="article-content" class="md markdown-body" v-html="article.content_html" />
-
-          <v-divider class="my-3" />
-          <div class="notice">
-            原创文章，可以转载，但请注明出处，谢谢合作。Jalen的博客 (
-            <a href="/">https://www.jalen.top</a>)
-          </div>
-          <div>
-            标签：
-            <v-btn
-              v-for="(tag, index) in article.tags"
-              :key="index"
-              class="mr-1 my-3"
-              small
-              color="info"
-              outlined
-              @click="onTagClick(tag.name)"
-            >
-              <v-icon left>
-                mdi-tag-outline
-              </v-icon>
-              {{ tag.name }}
-            </v-btn>
-          </div>
-          <v-divider />
-
-          <div cols="12" class="d-flex flex-sm-row flex-column-reverse py-3">
-            <v-btn
-              v-if="article.prev"
-              style="overflow: hidden"
-              small
-              color="secondary"
-              rounded
-              class="mb-2"
-              outlined
-              @click="toArticle(article.prev)"
-            >
-              <v-icon left>
-                mdi-chevron-left
-              </v-icon>
-              上一篇：{{ prev_title }}
-            </v-btn>
-            <v-spacer />
-            <v-btn
-              v-if="article.next"
-              style="overflow: hidden"
-              color="secondary"
-              small
-              rounded
-              class="mb-2"
-              outlined
-              @click="toArticle(article.next)"
-            >
-              下一篇：{{ next_title }}
-              <v-icon right>
-                mdi-chevron-right
-              </v-icon>
-            </v-btn>
-          </div>
         </v-card>
       </v-skeleton-loader>
       <v-card elevation="1" class="mt-4 pa-4" :style="card_style">
@@ -190,10 +92,9 @@
 <script>
 // 自定义样式，调整默认样式以适应 dark 模式
 import hljs from 'highlight.js'
-// 预览大图组件
-import MyImageViewer from '../../components/MyImageViewer'
-import CommentTreeItem from '../../components/CommentTreeItem'
-import OauthLoginCard from '../../components/OauthLoginCard'
+import MyImageViewer from '../components/MyImageViewer'
+import CommentTreeItem from '../components/CommentTreeItem'
+import OauthLoginCard from '../components/OauthLoginCard'
 
 export default {
   components: {
@@ -209,12 +110,12 @@ export default {
         store.dispatch('actionSetMenus', categories)
       })
   },
-  async asyncData ({ app, params, store, payload }) {
+  async asyncData ({ app, store, payload }) {
     let article = null
     if (payload) {
       article = payload
     } else {
-      const res = await app.$api.getArticle(params.id)
+      const res = await app.$api.getArticle(1)
       article = res.data.data
     }
     const breadcrumbs = [
@@ -223,21 +124,15 @@ export default {
         to: '/',
         text: '首页',
         nuxt: true
+      },
+      {
+        disabled: true,
+        to: '/',
+        text: '留言区',
+        nuxt: true
       }
     ]
-    breadcrumbs.push({
-      disabled: false,
-      to: '/?category=' + article.category.name,
-      text: article.category.name,
-      nuxt: true
-    })
-    breadcrumbs.push({
-      disabled: true,
-      to: null,
-      text: article.title,
-      nuxt: true
-    })
-    store.dispatch('actionSetCurrentMenu', article.category.name)
+    store.dispatch('actionSetCurrentMenu', '留言区')
     return { article, breadcrumbs }
   },
   data () {
@@ -338,31 +233,6 @@ export default {
       this.$api.getComments(this.article.id).then((response) => {
         this.comments = response.data.data
       })
-    },
-    onTagClick (tagName) {
-      this.$router.push({
-        path: '/',
-        query: {
-          page: 1,
-          tag: tagName
-        }
-      })
-    },
-    onTopicClick (topicName) {
-      const rt = {
-        path: '/',
-        query: {
-          page: 1,
-          topic: topicName
-        }
-      }
-      this.$router.push(rt)
-    },
-    toArticle (article) {
-      const rt = {
-        path: '/articles/' + article.id
-      }
-      this.$router.push(rt)
     },
     hideImg () {
       this.showImgView = false
