@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     login (type) {
-      this.$emit('onOauthTypeClick', type)
+      this.$emit('onOauthClick', type)
     },
     logout () {
       this.$emit('onLogoutClick')
