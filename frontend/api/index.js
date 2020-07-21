@@ -16,15 +16,23 @@ export default function ($axios) {
     getLinks: () => {
       return $axios.get('/links')
     },
+    getComments: (id) => {
+      return $axios.get('/articles/' + id + '/comments')
+    },
     logout: (type, accessToken) => {
-      $axios.setHeader('access_token', accessToken)
+      $axios.setHeader('token', accessToken)
       $axios.setHeader('type', type)
       return $axios.get('/oauth/logout')
     },
     getUserInfoByAccessToken: (type, accessToken) => {
-      $axios.setHeader('access_token', accessToken)
+      $axios.setHeader('token', accessToken)
       $axios.setHeader('type', type)
       return $axios.get('/oauth/me')
+    },
+    commentSubmit: (type, accessToken, params) => {
+      $axios.setHeader('token', accessToken)
+      $axios.setHeader('type', type)
+      return $axios.post('/comments', params)
     }
   }
 }

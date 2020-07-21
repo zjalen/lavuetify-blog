@@ -23,31 +23,39 @@ class OauthVerify
      */
     public function handle($request, Closure $next)
     {
-        if($request->hasHeader('access_token') && $request->hasHeader('type')){
-            $accessToken = $request->header('access_token');
+        if($request->hasHeader('token') && $request->hasHeader('type')){
+            $accessToken = $request->header('token');
             $type = $request->header('type');
             $socialite = new SocialiteManager(config('socialite'));
             try {
-                $accessToken = new AccessToken(['access_token' => $accessToken]);
-                $user = $socialite->driver($type)->user($accessToken);
+                $user = User::where('access_token', $accessToken)->where('type', $type)->first();
                 if ($user) {
-                    $user = User::where('access_token', $accessToken)->where('type', $type)->first();
-                    if ($user) {
-                        $update_time = $user->updated_at;
-                        if(Carbon::now()->diffInDays(Carbon::parse($update_time)) < 10) {
-                            $request->attributes->set('user_info', $user);
-                            return $next($request);
-                        }
+                    $update_time = $user->updated_at;
+                    if(Carbon::now()->diffInDays(Carbon::parse($update_time)) < 10) {
+                        $request->attributes->set('user_info', $user);
+                        return $next($request);
                     }
                 }
+                // $accessToken = new AccessToken(['access_token' => $accessToken]);
+                // $user = $socialite->driver($type)->user($accessToken);
+                // if ($user) {
+                //     $user = User::where('access_token', $accessToken)->where('type', $type)->first();
+                //     if ($user) {
+                //         $update_time = $user->updated_at;
+                //         if(Carbon::now()->diffInDays(Carbon::parse($update_time)) < 10) {
+                //             $request->attributes->set('user_info', $user);
+                //             return $next($request);
+                //         }
+                //     }
+                // }
             }catch (Exception $e) {
                 Log::error($e);
-                $data =  ['error_code' => 401, 'data' => 'noAuth'];
+                $data =  ['error_code' => 401, 'data' => 'auth failed'];
                 return Response::json($data, FoundationResponse::HTTP_UNAUTHORIZED);
             }
         };
 
-        $data =  ['error_code' => 401, 'data' => 'noAuth'];
+        $data =  ['error_code' => 401, 'data' => 'no user info'];
         return Response::json($data, FoundationResponse::HTTP_UNAUTHORIZED);
     }
 }

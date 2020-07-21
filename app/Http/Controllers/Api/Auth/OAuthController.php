@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\ApiResponse;
+use App\Models\Comment;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Log;

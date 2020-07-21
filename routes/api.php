@@ -41,6 +41,7 @@ Route::group([
 Route::namespace('Api')->group(function (\Illuminate\Routing\Router $router) {
     // 在 「App\Http\Controllers\Api」 命名空间下的控制器
     $router->get('article-ids', 'ArticlesController@ids');
+    $router->get('articles/{article_id}/comments', 'ArticlesController@comments');
     $router->apiResource('articles', 'ArticlesController')->only(['index', 'show']);
     $router->apiResource('categories', 'CategoriesController')->only(['index', 'show']);
     $router->apiResource('pages', 'PagesController')->only(['show']);

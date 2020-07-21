@@ -51,8 +51,9 @@ Route::group([
 Route::group([
     'prefix'     => 'api',
     'middleware' => ['oauth'],
-    'namespace'  => 'Api\Auth',
+    'namespace'  => 'Api',
 ], function (Router $router) {
-    $router->get('oauth/logout', 'OAuthController@logout');
-    $router->get('oauth/me', 'OAuthController@me');
+    $router->get('oauth/logout', 'Auth\OAuthController@logout');
+    $router->get('oauth/me', 'Auth\OAuthController@me');
+    $router->post('comments', 'ArticlesController@createComment');
 });

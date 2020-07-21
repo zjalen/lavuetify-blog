@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Models\Article;
+use App\Models\Comment;
 use Illuminate\Support\Facades\DB;
 
 class ArticlesController extends ApiBaseController
 {
+    private $comments;
     public function __construct()
     {
         parent::__construct();
@@ -52,5 +54,58 @@ class ArticlesController extends ApiBaseController
     public function ids()
     {
         return Article::where('is_draft', 0)->get(['id','cover','category_id','topic_id','title','created_at','content_md','content_html','pageviews']);
+    }
+
+    public function comments($article_id)
+    {
+        $result = [];
+        $this->comments = Comment::where('article_id', $article_id)->get();
+        $top_comments = $this->comments->where('level', 0)->collect();
+        foreach($top_comments as $top_comment) {
+            $top_comment->children = $this->getNodeTree($top_comment->id);
+            $top_comment->user = null;
+            array_push($result, $top_comment);
+        }
+        return $this->success($result);
+    }
+
+    public function getNodeTree($parent_id)
+    {
+        $children = [];
+        $comments = $this->comments->where('parent_id', $parent_id)->all();
+        if (count($comments) > 0) {
+            foreach($comments as $comment){
+                $comment->children = $this->getNodeTree($comment->id);
+                $comment->user = null;
+                array_push($children, $comment);
+            }
+        }
+        return $children;
+    }
+
+    public function createComment()
+    {
+        $user = request()->get('user_info');
+        $params = request()->only(['article_id', 'belong', 'parent_id', 'content']);
+        if (!array_key_exists('belong', $params) 
+        || !array_key_exists('parent_id', $params) 
+        || !array_key_exists('article_id', $params) 
+        || !array_key_exists('content', $params)) {
+            return $this->failed('参数有误');
+        }
+        $params['user_id'] = $user->id;
+        $comment = new Comment();
+        if ($params['parent_id'] == null) {
+            $params['level'] = 0;
+        }else {
+            $parent = Comment::find($params['parent_id']);
+            if (!$parent) {
+                return $this->notFond('未找到父级评论');
+            }
+            $params['level'] = $parent->level == 5 ? 5 : $parent->level + 1;
+        }
+        $comment->fill($params);
+        $comment->save();
+        return $this->created($comment);
     }
 }
