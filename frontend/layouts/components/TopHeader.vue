@@ -79,75 +79,7 @@
             </div>
           </v-flex>
           <v-spacer />
-          <v-menu v-if="user" offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-avatar
-                v-bind="attrs"
-                v-on="on"
-              >
-                <img
-                  class="pa-1"
-                  :src="user.avatar"
-                  :alt="user.nickname"
-                >
-              </v-avatar>
-            </template>
-            <v-list>
-              <v-list-item
-                @click.stop="logout"
-              >
-                <v-list-item-title class="d-flex justify-center align-center">
-                  <v-icon class="mr-2">
-                    mdi-logout
-                  </v-icon>
-                  退出登录
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-menu v-else offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                title="使用第三方登录"
-                icon
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-icon class="display-1">
-                  mdi-account
-                </v-icon>
-              </v-btn>
-            </template>
-            <v-card class="social-flex">
-              <a href="javascript:" @click="login('github')">
-                <div class="social-logo">
-                  <div class="social-div">
-                    <img style="width: 60px;" src="/images/github.png">
-                    <img style="width: 60px;" src="/images/github_hover.png">
-                  </div>
-                  <div>Github</div>
-                </div>
-              </a>
-              <a href="javascript:" @click="login('qq')">
-                <div class="social-logo">
-                  <div class="social-div">
-                    <img style="width: 60px;" src="/images/qq.png">
-                    <img style="width: 60px;" src="/images/qq_hover.png">
-                  </div>
-                  <div>QQ</div>
-                </div>
-              </a>
-              <a href="javascript:" @click="login('weibo')">
-                <div class="social-logo">
-                  <div class="social-div">
-                    <img style="width: 60px;" src="/images/weibo.png">
-                    <img style="width: 60px;" src="/images/weibo_hover.png">
-                  </div>
-                  <div>微博</div>
-                </div>
-              </a>
-            </v-card>
-          </v-menu>
+          <oauth-login-card :user="user" @onOauthClick="onOauthClick" @onLogoutClick="onLogoutClick" />
           <v-btn title="切换暗色/亮色主题" icon @click.stop="switchTheme">
             <v-icon class="display-1">
               mdi-brightness-{{ icon_light }}
@@ -163,7 +95,7 @@
 
       <template v-slot:extension>
         <v-container style="max-width: 1185px;" class="px-3 py-0 my-0">
-          <v-toolbar-items class="d-sm-block d-none secondary darken-3" style="height: 48px;">
+          <v-toolbar-items class="d-sm-block d-none secondary darken-3 menu-area">
             <template v-for="(menu, key) in cateArray">
               <v-btn
                 v-if="!menu.children || menu.children.length === 0"
@@ -215,8 +147,9 @@
   </div>
 </template>
 <script>
+import OauthLoginCard from '../../components/OauthLoginCard'
 export default {
-  components: {},
+  components: { OauthLoginCard },
   props: {
     categories: {
       type: Array,
@@ -309,15 +242,14 @@ export default {
       }
       this.$router.push(rt)
     },
-    login (type) {
+    onOauthClick (type) {
       let page = window.location.pathname
       page = encodeURIComponent(page)
       // page = page.substring(1);
       const url = process.env.API_HOST + '/oauth/login/' + type + '?frontend_url=' + page
-      console.log(url)
       window.location.href = url
     },
-    logout () {
+    onLogoutClick () {
       const type = this.$store.state.user.type
       const accessToken = this.$store.state.user.access_token
       this.$api.logout(type, accessToken).then(() => {
@@ -355,68 +287,12 @@ export default {
     z-index: -1;
     height: 248px;
   }
-
-  .social-flex {
-    display: flex;
-    justify-content: space-between;
-
-    .social-logo {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 80px;
-      height: 80px;
-      border-radius: 5px;
-      color: #9a9a9a;
-
-      &:hover {
-        background-color: var(--v-primary-base);
-        color: #fff;
-
-        .social-div {
-
-          img:last-child {
-            opacity: 1;
-          }
-
-          img:first-child {
-            opacity: 0;
-          }
-        }
-      }
-
-      .social-div {
-        position: relative;
-        width: 60px;
-        height: 60px;
-
-        img:last-child {
-          position: absolute;
-          top: 0;
-          left: 0;
-          opacity: 0;
-          z-index: 1;
-          transition: all 0.3s ease-in;
-
-          &:hover {
-            opacity: 1;
-          }
-        }
-
-        img:first-child {
-          position: absolute;
-          top: 0;
-          left: 0;
-          opacity: 1;
-          z-index: 1;
-          transition: all 0.3s ease-in;
-
-          &:hover {
-            opacity: 0;
-          }
-        }
-      }
+  .menu-area {
+    height: 48px;
+    overflow-y: scroll;
+    white-space: nowrap;
+    &::-webkit-scrollbar {
+      display: none;
     }
   }
 </style>

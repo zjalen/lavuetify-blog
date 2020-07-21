@@ -1,32 +1,43 @@
 <template>
   <div>
-    <div class="comments pa-3 reply">
-      <div class="comment-header">
-        <div class="avatar">
-          <img :src="comment.avatar" class="avatar-img">
-        </div>
-        <div class="nickname-area">
-          <div>
-            <span class="nickname">{{ comment.nickname }}</span> <span v-if="comment.parent">回复 <span
-              class="nickname"
-            >{{ comment.parent.nickname }}:</span></span>
+    <v-card elevation="1" class="comments pa-3 reply">
+      <v-card-actions>
+        <div class="d-flex justify-start align-center">
+          <v-avatar>
+            <img :src="comment.avatar">
+          </v-avatar>
+          <div class="nickname-area ml-3">
+            <div class="d-flex flex-column">
+              <div>
+                <span class="nickname mr-3">{{ comment.nickname }}</span>
+                <span v-if="comment.parent">
+                  回复
+                  <span
+                    class="nickname ml-3"
+                  >{{ comment.parent.nickname }}:
+                  </span>
+                </span>
+              </div>
+              <div class="publish-time">
+                {{ comment.created_at }}
+              </div>
+            </div>
           </div>
-          <div class="publish-time">
-            {{ comment.created_at }}
-          </div>
         </div>
-      </div>
-      <div>
-        <div>
-          {{ comment.content }}
-          <a
-            class="btn-reply"
-            href="javascript:"
-            @click="onReply(comment.id, comment.id)"
-          >点击回复</a>
-        </div>
-      </div>
-    </div>
+        <v-spacer />
+        <v-btn
+          outlined
+          color="primary"
+          href="javascript:"
+          @click="onReply(comment.id, comment.id)"
+        >
+          回复
+        </v-btn>
+      </v-card-actions>
+      <v-card-text>
+        {{ comment.content }}
+      </v-card-text>
+    </v-card>
     <div v-for="(sub_comment, k) in comment.children" :key="k" :style="subCommentStyle(sub_comment.level)">
       <comment-tree-item :comment="sub_comment" @onReplyClick="onReplyClick" />
     </div>
@@ -62,20 +73,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .comments {
-    margin-top: 15px;
-
-    .comment {
-      border-top: #aad0f7 dashed 1px;
-      margin-bottom: 10px;
-    }
-
-    .sub-comment {
-      border-top: #aad0f7 dashed 1px;
-      margin-left: 30px;
-    }
-  }
-
   .comment-header {
     height: 50px;
     margin: 10px 0;
@@ -109,7 +106,6 @@ export default {
       color: #ff9800;
       font-size: 15px;
       font-weight: 500;
-      margin: 0 5px;
     }
 
     .publish-time {
@@ -120,12 +116,13 @@ export default {
   }
 
   .reply {
+    border-top: #aad0f7 dashed 1px;
     font-size: 15px;
     font-weight: 400;
     padding: 8px 16px;
-    background-color: #ecf8ff;
+    background-color: var(--v-commentBackground-base);
     border-radius: 4px;
-    border-left: 5px solid #50bfff;
+    border-left: 5px solid var(--v-secondary-base);
     margin: 20px 0;
   }
 </style>

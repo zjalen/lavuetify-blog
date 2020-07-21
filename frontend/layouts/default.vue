@@ -83,5 +83,6 @@ export default {
   }
   .content {
     min-height: calc(100vh - 168px - 123px);
+    background-color: var(--v-background-base);
   }
 </style>

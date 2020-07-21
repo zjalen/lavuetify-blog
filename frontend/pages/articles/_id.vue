@@ -114,80 +114,12 @@
       </v-skeleton-loader>
       <v-card elevation="0" class="mt-4 pa-4" :style="card_style">
         <v-card-subtitle>评论区</v-card-subtitle>
-        <v-card-text class="mb-0">
-          <v-menu v-if="user" offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-avatar
-                v-bind="attrs"
-                v-on="on"
-              >
-                <img
-                  class="pa-1"
-                  :src="user.avatar"
-                  :alt="user.nickname"
-                >
-              </v-avatar>
-            </template>
-            <v-list>
-              <v-list-item
-                @click.stop="logout"
-              >
-                <v-list-item-title class="d-flex justify-center align-center">
-                  <v-icon class="mr-2">
-                    mdi-logout
-                  </v-icon>
-                  退出登录
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-menu v-else offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                title="使用第三方登录"
-                icon
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-icon class="display-1">
-                  mdi-account
-                </v-icon>
-              </v-btn>
-            </template>
-            <v-card class="social-flex">
-              <a href="javascript:" @click="login('github')">
-                <div class="social-logo">
-                  <div class="social-div">
-                    <img style="width: 60px;" src="/images/github.png">
-                    <img style="width: 60px;" src="/images/github_hover.png">
-                  </div>
-                  <div>Github</div>
-                </div>
-              </a>
-              <a href="javascript:" @click="login('qq')">
-                <div class="social-logo">
-                  <div class="social-div">
-                    <img style="width: 60px;" src="/images/qq.png">
-                    <img style="width: 60px;" src="/images/qq_hover.png">
-                  </div>
-                  <div>QQ</div>
-                </div>
-              </a>
-              <a href="javascript:" @click="login('weibo')">
-                <div class="social-logo">
-                  <div class="social-div">
-                    <img style="width: 60px;" src="/images/weibo.png">
-                    <img style="width: 60px;" src="/images/weibo_hover.png">
-                  </div>
-                  <div>微博</div>
-                </div>
-              </a>
-            </v-card>
-          </v-menu>
+        <v-card-text class="pb-0">
+          <oauth-login-card :user="user" @onOauthClick="onOauthClick" @onLogoutClick="onLogoutClick" />
           <v-textarea
             v-model="submitParams.content"
-            placeholder="请点击上方头像登录后发表评论"
-            hint="请登录发表评论"
+            :placeholder="user ? user.nickname + ':' : '请点击上方头像登录后发表评论'"
+            :hint="user ? '欢迎评论交流' : '请先登录再评论'"
             rows="2"
             class="mt-3"
             outlined
@@ -225,7 +157,7 @@
     >
       <v-card>
         <v-card-title
-          class="title primary white--text"
+          class="title secondary white--text"
           primary-title
         >
           {{ dialog.title }}
@@ -263,9 +195,11 @@ import hljs from 'highlight.js'
 // 预览大图组件
 import MyImageViewer from '../../components/MyImageViewer'
 import CommentTreeItem from '../../components/CommentTreeItem'
+import OauthLoginCard from '../../components/OauthLoginCard'
 
 export default {
   components: {
+    OauthLoginCard,
     CommentTreeItem,
     // mavonEditor,
     MyImageViewer
@@ -471,7 +405,7 @@ export default {
       //   }
       // }
     },
-    login (type) {
+    onOauthClick (type) {
       let page = window.location.pathname
       page = encodeURIComponent(page)
       // page = page.substring(1);
@@ -479,7 +413,7 @@ export default {
       console.log(url)
       window.location.href = url
     },
-    logout () {
+    onLogoutClick () {
       const type = this.$store.state.user.type
       const accessToken = this.$store.state.user.access_token
       this.$api.logout(type, accessToken).then(() => {
@@ -562,69 +496,6 @@ export default {
     border-radius: 4px;
     border-left: 5px solid #50bfff;
     margin: 20px 0;
-  }
-  .social-flex {
-    display: flex;
-    justify-content: space-between;
-
-    .social-logo {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 80px;
-      height: 80px;
-      border-radius: 5px;
-      color: #9a9a9a;
-
-      &:hover {
-        background-color: var(--v-primary-base);
-        color: #fff;
-
-        .social-div {
-
-          img:last-child {
-            opacity: 1;
-          }
-
-          img:first-child {
-            opacity: 0;
-          }
-        }
-      }
-
-      .social-div {
-        position: relative;
-        width: 60px;
-        height: 60px;
-
-        img:last-child {
-          position: absolute;
-          top: 0;
-          left: 0;
-          opacity: 0;
-          z-index: 1;
-          transition: all 0.3s ease-in;
-
-          &:hover {
-            opacity: 1;
-          }
-        }
-
-        img:first-child {
-          position: absolute;
-          top: 0;
-          left: 0;
-          opacity: 1;
-          z-index: 1;
-          transition: all 0.3s ease-in;
-
-          &:hover {
-            opacity: 0;
-          }
-        }
-      }
-    }
   }
 
   .button-area {

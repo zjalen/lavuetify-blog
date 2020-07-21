@@ -86,7 +86,9 @@ export default {
           tertiary: colors.orange,
           accent: colors.shades,
           error: colors.red,
-          grey: colors.grey
+          grey: colors.grey,
+          background: '#EDEDED',
+          commentBackground: '#ecf8ff'
         },
         dark: {
           primary: colors.shades,
@@ -94,7 +96,9 @@ export default {
           tertiary: colors.orange,
           accent: colors.shades,
           error: colors.red,
-          grey: colors.grey
+          grey: colors.grey,
+          background: colors.shades,
+          commentBackground: colors.blueGrey.darken2
         }
       },
       options: {

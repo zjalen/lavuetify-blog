@@ -63,8 +63,9 @@ class ArticlesController extends ApiBaseController
         $top_comments = $this->comments->where('level', 0)->collect();
         foreach($top_comments as $top_comment) {
             $top_comment->children = $this->getNodeTree($top_comment->id);
-            $top_comment->user = null;
-            array_push($result, $top_comment);
+            $res = json_decode($top_comment, true);
+            unset($res['user']);
+            array_push($result, $res);
         }
         return $this->success($result);
     }
@@ -76,8 +77,9 @@ class ArticlesController extends ApiBaseController
         if (count($comments) > 0) {
             foreach($comments as $comment){
                 $comment->children = $this->getNodeTree($comment->id);
-                $comment->user = null;
-                array_push($children, $comment);
+                $res = json_decode($comment, true);
+                unset($res['user']);
+                array_push($children, $res);
             }
         }
         return $children;
