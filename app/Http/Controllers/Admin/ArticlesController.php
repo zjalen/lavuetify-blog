@@ -56,7 +56,7 @@ class ArticlesController extends AdminBaseController
         }
         foreach($params as $key => &$val) {
             if ($key == 'is_top' || $key == 'is_draft') {
-                $val = $val == 'null' ? false : $val;
+                $val = ($val == 'true' || $val == 1 || $val == true) ? 1 : 0;
             }else {
                 $val = $val == 'null' ? null : $val;
             }
@@ -104,9 +104,13 @@ class ArticlesController extends AdminBaseController
             unset($params['cover']);
         }
         $params['description'] = $params['description'] ?: substr(strip_tags($params['content_html']), 0, 60);
-        $params = array_map(function ($v) {
-            return $v == 'null' ? null : $v;
-        }, $params);
+        foreach($params as $key => &$val) {
+            if ($key == 'is_top' || $key == 'is_draft') {
+                $val = ($val == 'true' || $val == 1 || $val == true) ? 1 : 0;
+            }else {
+                $val = $val == 'null' ? null : $val;
+            }
+        }
         $article->fill($params);
         $res = $article->save();
         if ($res) {
