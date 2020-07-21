@@ -54,6 +54,13 @@ class ArticlesController extends AdminBaseController
         if (array_key_exists('description', $params)) {
             $params['description'] = $params['description'] == '' ? substr(strip_tags($params['content_html']), 60) : $params['description'];
         }
+        foreach($params as $key => &$val) {
+            if ($key == 'is_top' || $key == 'is_draft') {
+                $val = $val == 'null' ? false : $val;
+            }else {
+                $val = $val == 'null' ? null : $val;
+            }
+        }
         $article = new Article();
         $article->fill($params);
         $res = $article->save();
