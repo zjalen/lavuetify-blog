@@ -103,65 +103,68 @@ class BaseController extends Controller
             $wheres = array_merge($filters['filters'], $this->getAppendCondition());
             foreach ($wheres as $k => $v) {
                 if (is_array($v)) {
-                    if (array_key_exists('value', $v) && array_key_exists('column', $v) && array_key_exists('sign', $v)) {
+                    if (array_key_exists('value', $v) && array_key_exists('column', $v)) {
                         // 搜索列白名单
-                        if (count($allow_search_columns) == 0 || array_key_exists($v['column'], $allow_search_columns)) {
-                            switch ($v['sign']) {
-                                case 'whereBetween':
-                                    $builder = $builder->whereBetween($v['column'], $v['value']);
-                                    break;
-                                case 'whereIn':
-                                    $builder = $builder->whereIn($v['column'], $v['value']);
-                                    break;
-                                case 'where':
-                                    if (array_key_exists('compare', $v)) {
-                                        if ($v['compare'] == 'like') {
-                                            $builder = $builder->where($v['column'], $v['compare'], '%' . $v['value'] . '%');
-                                        } else {
-                                            $builder = $builder->where($v['column'], $v['compare'], $v['value']);
-                                        }
-                                    } else {
-                                        $builder = $builder->where($v['column'], $v['value']);
-                                    }
-                                    break;
-                                case 'relation':
-                                    if (array_key_exists('relation_name', $v)) {
+                        if (array_key_exists('sign', $v)) {
+                            if (count($allow_search_columns) == 0 || array_key_exists($v['column'], $allow_search_columns)) {
+                                switch ($v['sign']) {
+                                    case 'whereBetween':
+                                        $builder = $builder->whereBetween($v['column'], $v['value']);
+                                        break;
+                                    case 'whereIn':
+                                        $builder = $builder->whereIn($v['column'], $v['value']);
+                                        break;
+                                    case 'where':
                                         if (array_key_exists('compare', $v)) {
-                                            $relation_array = explode('.', $v['relation_name']);
-                                            if (count($relation_array) == 1) {
-                                                $builder = $builder->whereHas($relation_array[0], function (Builder $query) use ($v) {
-                                                    if ($v['compare'] == 'like') {
-                                                        return $query->where($v['column'], $v['compare'], '%' . $v['value'] . '%');
-                                                    } else {
-                                                        return $query->where($v['column'], $v['compare'], $v['value']);
-                                                    }
-                                                });
-                                            } else if (count($relation_array) == 2) {
-                                                $builder = $builder->whereHas($relation_array[0], function (Builder $query) use ($v, $relation_array) {
-                                                    return $query->whereHas($relation_array[1], function (Builder $query) use ($v) {
+                                            if ($v['compare'] == 'like') {
+                                                $builder = $builder->where($v['column'], $v['compare'], '%' . $v['value'] . '%');
+                                            } else {
+                                                $builder = $builder->where($v['column'], $v['compare'], $v['value']);
+                                            }
+                                        } else {
+                                            $builder = $builder->where($v['column'], $v['value']);
+                                        }
+                                        break;
+                                    case 'relation':
+                                        if (array_key_exists('relation_name', $v)) {
+                                            if (array_key_exists('compare', $v)) {
+                                                $relation_array = explode('.', $v['relation_name']);
+                                                if (count($relation_array) == 1) {
+                                                    $builder = $builder->whereHas($relation_array[0], function (Builder $query) use ($v) {
                                                         if ($v['compare'] == 'like') {
                                                             return $query->where($v['column'], $v['compare'], '%' . $v['value'] . '%');
                                                         } else {
                                                             return $query->where($v['column'], $v['compare'], $v['value']);
                                                         }
                                                     });
+                                                } else if (count($relation_array) == 2) {
+                                                    $builder = $builder->whereHas($relation_array[0], function (Builder $query) use ($v, $relation_array) {
+                                                        return $query->whereHas($relation_array[1], function (Builder $query) use ($v) {
+                                                            if ($v['compare'] == 'like') {
+                                                                return $query->where($v['column'], $v['compare'], '%' . $v['value'] . '%');
+                                                            } else {
+                                                                return $query->where($v['column'], $v['compare'], $v['value']);
+                                                            }
+                                                        });
+                                                    });
+                                                }
+
+                                            } else if (array_key_exists('value', $v)) {
+                                                $relationName = $v['relation_name'];
+                                                $builder = $builder->whereHas($relationName, function (Builder $query) use ($v) {
+                                                    return $query->where($v['column'], $v['value']);
                                                 });
                                             }
-
-                                        } else if (array_key_exists('value', $v)) {
-                                            $relationName = $v['relation_name'];
-                                            $builder = $builder->whereHas($relationName, function (Builder $query) use ($v) {
-                                                return $query->where($v['column'], $v['value']);
-                                            });
                                         }
-                                    }
-                                    break;
-                                default:
-                                    $builder = $builder->where($v['column'], $v['value']);
-                                    break;
+                                        break;
+                                    default:
+                                        $builder = $builder->where($v['column'], $v['value']);
+                                        break;
+                                }
                             }
+                        }else {
+                            $builder = $builder->where($v['column'], $v['value']);
                         }
-
                     }
                 }
             }
