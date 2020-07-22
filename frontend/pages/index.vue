@@ -236,8 +236,9 @@ export default {
       if (currentPage !== page) {
         const rt = {}
         rt.path = '/'
-        rt.query = {}
+        rt.query = JSON.parse(JSON.stringify(this.$route.query))
         rt.query.page = page
+        console.log(rt)
         this.$router.push(rt)
       }
     },
