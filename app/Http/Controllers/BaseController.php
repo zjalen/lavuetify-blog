@@ -17,6 +17,7 @@ class BaseController extends Controller
     private $mp_info = null;
     private $model = null;
     private $append_condition = [];
+    private $append_order_condition = [];
 
     public function getAllowSearchColumns()
     {
@@ -41,6 +42,16 @@ class BaseController extends Controller
     public function getAppendCondition()
     {
         return $this->append_condition;
+    }
+
+    public function getAppendOrderCondition()
+    {
+        return $this->append_order_condition;
+    }
+
+    public function setAppendOrderCondition(array $orderCondition = [])
+    {
+        $this->append_order_condition = $orderCondition;
     }
 
     public function setAppendCondition(array $condition = [])
@@ -86,15 +97,26 @@ class BaseController extends Controller
             if (array_key_exists('_skip', $filters)) {
                 $builder = $builder->skip($filters['_skip']);
             }
+            $appendOrderCondition = $this->getAppendOrderCondition();
+            foreach($appendOrderCondition as $apk => $apv) {
+                $builder = $builder->orderBy($apk, $apv);
+            }
+            $isContainId = false;
             // 排序
             if (array_key_exists('_orderBy', $filters) && array_key_exists('_orderByDesc', $filters)) {
                 foreach ($filters['_orderBy'] as $key => $column) {
                     if (array_key_exists($key, $filters['_orderByDesc'])) {
-                        $type = $filters['_orderByDesc'][$key] == 'true' ? 'DESC' : 'ASC';
+                        $type = $filters['_orderByDesc'][$key] == 'true' || $filters['_orderByDesc'][$key] == true || $filters['_orderByDesc'][$key] == 'DESC'  ? 'DESC' : 'ASC';
                         $builder = $builder->orderBy($column, $type);
+                    }else {
+                        $builder = $builder->orderBy($column);
+                    }
+                    if ($column == 'id') {
+                        $isContainId = true;
                     }
                 }
-            } else {
+            }
+            if (!$isContainId) {
                 $builder = $builder->orderBy('id', 'DESC');
             }
         }

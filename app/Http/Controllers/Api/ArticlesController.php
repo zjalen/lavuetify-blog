@@ -19,6 +19,7 @@ class ArticlesController extends ApiBaseController
         $this->setModel(new Article());
         $this->setAllowShowColumns(['id','title','description','created_at','cover','category_id','topic_id','is_top']);
         $this->setAppendCondition([['column' => 'is_draft', 'value' => 0]]);
+        $this->setAppendOrderCondition(['is_top' => 'DESC']);
     }
 
     /**
