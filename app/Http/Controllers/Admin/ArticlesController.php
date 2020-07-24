@@ -54,11 +54,12 @@ class ArticlesController extends AdminBaseController
         foreach($params as $key => &$val) {
             if ($key == 'is_top' || $key == 'is_draft') {
                 $val = ($val == 'true' || $val == 1) ? 1 : 0;
+            }else if($key == 'description'){
+                $val = ($val == 'null' || $val == null) ? substr(strip_tags($params['content_html']), 0, 60) : $val;
             }else {
                 $val = $val == 'null' ? null : $val;
             }
         }
-        $params['description'] = ($params['description'] != null && $params['description'] != '') ? $params['description'] : substr(strip_tags($params['content_html']), 0, 60);
         $article = new Article();
         $article->fill($params);
         $res = $article->save();
@@ -104,11 +105,12 @@ class ArticlesController extends AdminBaseController
         foreach($params as $key => &$val) {
             if ($key == 'is_top' || $key == 'is_draft') {
                 $val = ($val == 'true' || $val == 1) ? 1 : 0;
+            }else if($key == 'description'){
+                $val = ($val == 'null' || $val == null) ? substr(strip_tags($params['content_html']), 0, 60) : $val;
             }else {
                 $val = $val == 'null' ? null : $val;
             }
         }
-        $params['description'] = ($params['description'] != null && $params['description'] != '') ? $params['description'] : substr(strip_tags($params['content_html']), 0, 60);
         $article->fill($params);
         $res = $article->save();
         if ($res) {

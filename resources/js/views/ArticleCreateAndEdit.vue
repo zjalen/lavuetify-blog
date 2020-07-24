@@ -250,7 +250,8 @@ export default {
       }
       Object.keys(this.form_data).forEach(value => {
         let val = this.article[value] === true ? 1 : this.article[value]
-        val = val === undefined ? null : this.article[value]
+        val = val === false ? 0 : val
+        val = (val === undefined || val === '') ? null : val
         this.params.append(value, val)
       })
       this.params.append('cover', this.cover_file)
