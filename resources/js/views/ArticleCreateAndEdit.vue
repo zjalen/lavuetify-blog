@@ -49,7 +49,7 @@
           @click:append="onAppendClick"
         ></v-file-input>
         <div v-if="image_url" class="d-flex justify-center align-center pb-3">
-          <v-img :src="image_url" max-width="200px" aspect-ratio="1.7"></v-img>
+          <v-img :src="image_url" max-width="200px" aspect-ratio="1"></v-img>
         </div>
         <v-card class="mt-4">
           <v-card-title>文章分类</v-card-title>

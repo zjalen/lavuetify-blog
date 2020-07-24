@@ -55,6 +55,7 @@ class ArticlesController extends AdminBaseController
             if ($key == 'is_top' || $key == 'is_draft') {
                 $val = ($val == 'true' || $val == 1) ? 1 : 0;
             }else if($key == 'description'){
+                // TODO 部分情况下会造成个别标签字符转码出现异常
                 $val = ($val == 'null' || $val == null) ? substr(strip_tags($params['content_html']), 0, 60) : $val;
             }else {
                 $val = $val == 'null' ? null : $val;
