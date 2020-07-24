@@ -51,9 +51,6 @@ class ArticlesController extends AdminBaseController
         }else {
             $params['cover'] = '';
         }
-        if (array_key_exists('description', $params)) {
-            $params['description'] = $params['description'] == '' ? substr(strip_tags($params['content_html']), 60) : $params['description'];
-        }
         foreach($params as $key => &$val) {
             if ($key == 'is_top' || $key == 'is_draft') {
                 $val = ($val == 'true' || $val == 1 || $val == true) ? 1 : 0;
@@ -61,6 +58,7 @@ class ArticlesController extends AdminBaseController
                 $val = $val == 'null' ? null : $val;
             }
         }
+        $params['description'] = $params['description'] != null && $params['description'] != '' ?: substr(strip_tags($params['content_html']), 0, 60);
         $article = new Article();
         $article->fill($params);
         $res = $article->save();
@@ -103,7 +101,6 @@ class ArticlesController extends AdminBaseController
         }else {
             unset($params['cover']);
         }
-        $params['description'] = $params['description'] ?: substr(strip_tags($params['content_html']), 0, 60);
         foreach($params as $key => &$val) {
             if ($key == 'is_top' || $key == 'is_draft') {
                 $val = ($val == 'true' || $val == 1 || $val == true) ? 1 : 0;
@@ -111,6 +108,7 @@ class ArticlesController extends AdminBaseController
                 $val = $val == 'null' ? null : $val;
             }
         }
+        $params['description'] = $params['description'] != null && $params['description'] != '' ?: substr(strip_tags($params['content_html']), 0, 60);
         $article->fill($params);
         $res = $article->save();
         if ($res) {
