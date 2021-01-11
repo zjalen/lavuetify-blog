@@ -22,7 +22,7 @@
 
       <v-card-text class="white--text">
         <v-layout column justify-center wrap align-center>
-          <a class="text-style" href="http://www.miitbeian.gov.cn/">备案号:粤ICP备16095696号-2</a>
+          <a class="text-style" href="https://beian.miit.gov.cn/">备案号:粤ICP备16095696号-2</a>
         </v-layout>
       </v-card-text>
       <v-dialog v-model="dialog" max-width="290">
